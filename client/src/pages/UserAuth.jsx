@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import OTPInput from "../components/OTPInput";
 
 const UserAuth = () => {
   const [status, setstatus] = useState(true);
+  const [getOTP, setgetOTP] = useState(false);
+
+  const sendOTP = ()=>{
+    setgetOTP(true);
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -54,7 +60,7 @@ const UserAuth = () => {
               required
             />
 
-            <button className="bg-[#4CAF93] text-white  w-full h-[6vh] font-semibold rounded-md mt-5 cursor-pointer">
+            <button className="bg-[#4CAF93] text-white  w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer">
               Login
             </button>
           </div>
@@ -72,14 +78,23 @@ const UserAuth = () => {
               <input
               type="email"
               placeholder="Enter E-mail"
-              className="w-[80%]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
+              className="w-[80%]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4 h-full   "
               autoComplete="off"
               required
             />
-            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer">
+            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full" onClick={sendOTP}>
               Get OTP
             </button>
             </div>
+
+            {getOTP ? (
+              <div className="mt-8  w-full h-[6vh] flex justify-between">
+              <OTPInput/>
+              <button type="button" className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full">Verify</button>
+            </div>
+            ):
+              <div className="mt-4"></div>
+            }
 
             <input
               type="password"
@@ -89,7 +104,7 @@ const UserAuth = () => {
               required
             />
 
-            <button className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-5 cursor-pointer">
+            <button className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer">
               Register
             </button>
           </div>
