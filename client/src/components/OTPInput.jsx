@@ -33,6 +33,7 @@ const OTPInput = () => {
       
    }
 
+
   return (
     <div>
         {otpValue.map((input,index)=>(

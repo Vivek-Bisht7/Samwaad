@@ -1,6 +1,6 @@
 import React from 'react'
 import UserAuth from './pages/UserAuth'
-import Timer from './components/Timer'
+import OTPInput from './components/OTPInput'
 
 const App = () => {
   return (
