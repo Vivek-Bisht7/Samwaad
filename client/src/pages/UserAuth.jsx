@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import OTPInput from "../components/OTPInput";
+import Timer from "../components/Timer";
 
 const UserAuth = () => {
   const [status, setstatus] = useState(true);
@@ -82,14 +83,15 @@ const UserAuth = () => {
               autoComplete="off"
               required
             />
-            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full" onClick={sendOTP}>
+            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full" type="button" onClick={sendOTP}>
               Get OTP
             </button>
             </div>
 
             {getOTP ? (
-              <div className="mt-8  w-full h-[6vh] flex justify-between">
+              <div className="mt-8  w-full h-[6vh] flex justify-between items-center">
               <OTPInput/>
+              <Timer/>
               <button type="button" className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full">Verify</button>
             </div>
             ):

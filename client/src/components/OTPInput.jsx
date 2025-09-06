@@ -8,9 +8,7 @@ const OTPInput = () => {
    const inputRefs = useRef([]);
 
    useEffect(() => {
-       setTimeout(() => {
         inputRefs.current[0]?.focus();
-      }, 0);
    }, [])
    
 
