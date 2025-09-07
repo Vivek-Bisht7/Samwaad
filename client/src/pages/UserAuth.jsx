@@ -26,6 +26,7 @@ const UserAuth = () => {
     setgetOTP(true);
   }
 
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <Navbar/>
