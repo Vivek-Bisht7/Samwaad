@@ -109,7 +109,7 @@ const UserAuth = () => {
               autoComplete="off"
               required
             />
-            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full" type="button" onClick={sendOTP}
+            <button className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full hover:bg-[#4CAF93] hover:text-white" type="button" onClick={sendOTP}
             disabled={!userName || !emailRegex.test(userEmail)}>
               Get OTP
             </button>
@@ -119,7 +119,7 @@ const UserAuth = () => {
               <div className="mt-8  w-full h-[6vh] flex justify-between items-center">
               <OTPInput/>
               <Timer/>
-              <button type="button" className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full">Verify</button>
+              <button type="button" className="w-[18%] ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full hover:bg-[#4CAF93] hover:text-white">Verify</button>
             </div>
             ):
               <div className="mt-4"></div>
