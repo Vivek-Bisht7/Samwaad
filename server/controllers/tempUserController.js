@@ -1,26 +1,149 @@
-const TempUser = require('../models/tempUser');
-const bcrypt = require('bcrypt');
+const TempUser = require("../models/tempUser");
+const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 
-const createTempUser = async (req,res)=>{
-    const {userEmail} = req.body;
+const sendOTPEmail = (userEmail, otp) => {
+  const htmlContent = `<!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                        <meta charset="UTF-8">
+                        <title>Samwaad OTP Verification</title>
+                        <style>
+                            body {
+                            margin: 0;
+                            padding: 0;
+                            background-color: #4CAF93;
+                            font-family: Arial, sans-serif;
+                            }
+                            .container {
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background: #ffffff;
+                            border-radius: 10px;
+                            overflow: hidden;
+                            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                            }
+                            .header {
+                            background: #4CAF93;
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 20px;
+                            font-size: 24px;
+                            font-weight: bold;
+                            }
+                            .body {
+                            padding: 30px;
+                            color: #333333;
+                            font-size: 16px;
+                            line-height: 1.6;
+                            }
+                            .otp-box {
+                            margin: 20px 0;
+                            padding: 15px;
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: bold;
+                            color: #4CAF93;
+                            border: 2px dashed #4CAF93;
+                            border-radius: 8px;
+                            background: #f0f5ff;
+                            letter-spacing: 6px;
+                            }
+                            .footer {
+                            background: #f4f6f8;
+                            text-align: center;
+                            padding: 15px;
+                            font-size: 12px;
+                            color: #888888;
+                            }
+                            .btn {
+                            display: inline-block;
+                            margin-top: 20px;
+                            padding: 12px 25px;
+                            background: #4CAF93;
+                            color: #ffffff !important;
+                            text-decoration: none;
+                            border-radius: 6px;
+                            font-weight: bold;
+                            }
+                        </style>
+                        </head>
+                        <body>
+                        <div class="container">
+                            <div class="header">Samwaad</div>
+                            <div class="body">
+                            <p>Hello,</p>
+                            <p>Thank you for signing up with <strong>Samwaad</strong>! To complete your verification, please use the OTP below:</p>
+                            <div class="otp-box">${otp}</div>
+                            <p>This OTP will expire in <strong>5 minutes</strong>. Please do not share it with anyone.</p>
+                            <a href="#" class="btn">Verify Now</a>
+                            <p>If you didn’t request this, you can ignore this email.</p>
+                            <p>– The Samwaad Team</p>
+                            </div>
+                            <div class="footer">
+                            © 2025 Samwaad. All rights reserved.
+                            </div>
+                        </div>
+                        </body>
+                        </html>
+    `;
 
-    if(!userEmail) return res.status(400).json({success:false,message:"Email is missing"});
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "noreply.samwaad@gmail.com",
+      pass: "iwxo evhh kuhw hnuj",
+    },
+  });
 
-    const otp = 1000 + Math.floor(Math.random() * 9000);
+  (async () => {
+    const info = await transporter.sendMail({
+      from: '"Samwaad" <noreply.samwaad@gmail.com>',
+      to: userEmail,
+      subject: "Verify",
+      html: htmlContent,
+    });
 
-    const hashedOTP = await bcrypt.hash(String(otp) , 10);
+    console.log("Message sent:", info.messageId);
+  })();
+};
 
-    try{
-        await TempUser.create({
-                email:userEmail,
-                hashedOTP,
-        })
+const createTempUser = async (req, res) => {
+  const { userEmail } = req.body;
 
-        return res.status(200).json({success:true,message:"User created successfully"});
+  if (!userEmail)
+    return res
+      .status(400)
+      .json({ success: false, message: "Email is missing" });
+
+  const otp = 1000 + Math.floor(Math.random() * 9000);
+  const hashedOTP = await bcrypt.hash(String(otp), 10);
+
+  try {
+    const temporaryUser = await TempUser.findOne({ email: userEmail });
+
+    if (temporaryUser) {
+      temporaryUser.hashedOTP = hashedOTP;
+      await temporaryUser.save();
+    } 
+    else {
+      await TempUser.create({
+        email: userEmail,
+        hashedOTP,
+      });
     }
-    catch(e){
-        return res.status(500).json({success:false ,message:e.message});
-    }
-}
 
-module.exports = {createTempUser};
+    sendOTPEmail(userEmail, otp);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "User created successfully" });
+  } 
+  catch (e) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+module.exports = { createTempUser };
