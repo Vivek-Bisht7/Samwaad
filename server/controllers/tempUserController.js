@@ -93,16 +93,16 @@ const sendOTPEmail = (userEmail, otp) => {
     port: 587,
     secure: false,
     auth: {
-      user: "noreply.samwaad@gmail.com",
-      pass: "iwxo evhh kuhw hnuj",
+      user: `${process.env.EMAIL}`,
+      pass: `${process.env.PASSWORD}`,
     },
   });
 
   (async () => {
     const info = await transporter.sendMail({
-      from: '"Samwaad" <noreply.samwaad@gmail.com>',
+      from: '"Samwaad" <`${process.env.EMAIL}`>',
       to: userEmail,
-      subject: "Verify",
+      subject: "Verify your E-mail",
       html: htmlContent,
     });
 
