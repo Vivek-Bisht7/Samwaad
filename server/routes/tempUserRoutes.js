@@ -1,7 +1,8 @@
 const express = require('express');
-const Router = express.Router();
-const {createTempUser} = require('../controllers/tempUserController');
+const router = express.Router();
+const {createTempUser,verifyOTP} = require('../controllers/tempUserController');
 
-Router.post("/",createTempUser);
+router.post("/",createTempUser);
+router.post("/verify",verifyOTP);
 
-module.exports = Router;
+module.exports = router;

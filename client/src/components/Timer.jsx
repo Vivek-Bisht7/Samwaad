@@ -5,7 +5,7 @@ const Timer = () => {
   
   useEffect(() => {
     setTimeout(() => {
-      setduration(duration-1000);
+      if(duration>0) setduration(duration-1000);
     }, 1000);
 
   }, [duration])

@@ -56,16 +56,6 @@ const sendOTPEmail = (userEmail, otp) => {
                             font-size: 12px;
                             color: #888888;
                             }
-                            .btn {
-                            display: inline-block;
-                            margin-top: 20px;
-                            padding: 12px 25px;
-                            background: #4CAF93;
-                            color: #ffffff !important;
-                            text-decoration: none;
-                            border-radius: 6px;
-                            font-weight: bold;
-                            }
                         </style>
                         </head>
                         <body>
@@ -76,7 +66,6 @@ const sendOTPEmail = (userEmail, otp) => {
                             <p>Thank you for signing up with <strong>Samwaad</strong>! To complete your verification, please use the OTP below:</p>
                             <div class="otp-box">${otp}</div>
                             <p>This OTP will expire in <strong>5 minutes</strong>. Please do not share it with anyone.</p>
-                            <a href="#" class="btn">Verify Now</a>
                             <p>If you didn’t request this, you can ignore this email.</p>
                             <p>– The Samwaad Team</p>
                             </div>
@@ -126,9 +115,9 @@ const createTempUser = async (req, res) => {
 
     if (temporaryUser) {
       temporaryUser.hashedOTP = hashedOTP;
+      temporaryUser.otpExpiresAt = Date.now();
       await temporaryUser.save();
-    } 
-    else {
+    } else {
       await TempUser.create({
         email: userEmail,
         hashedOTP,
@@ -140,10 +129,39 @@ const createTempUser = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, message: "User created successfully" });
-  } 
-  catch (e) {
+  } catch (e) {
     return res.status(500).json({ success: false, message: e.message });
   }
 };
 
-module.exports = { createTempUser };
+const verifyOTP = async (req, res) => {
+  const { userEmail, OTP } = req.body;
+
+  try {
+    const temporaryUser = await TempUser.findOne({ email: userEmail });
+
+    bcrypt.compare(OTP, temporaryUser.hashedOTP, async function (err, result) {
+      if (result === true) {
+        if (Date.now() - temporaryUser.otpExpiresAt > 1000 * 60 * 5) {
+          return res
+            .status(200)
+            .json({ success: "false", message: "Time limit exceeded" });
+        }
+        temporaryUser.isVerified = true;
+        await temporaryUser.save();
+
+        return res
+          .status(200)
+          .json({ success: "true", message: "OTP matched successfully" });
+      } else {
+        return res
+          .status(400)
+          .json({ success: "false", message: "OTP did not matched " });
+      }
+    });
+  } catch (err) {
+    console.error("Error : " + err.message);
+  }
+};
+
+module.exports = { createTempUser, verifyOTP };

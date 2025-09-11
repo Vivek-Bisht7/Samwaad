@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-const OTPInput = () => {
+const OTPInput = ({onOtpComplete}) => {
    const OTPSize = 4;
 
    const [otpValue, setotpValue] = useState(new Array(OTPSize).fill(""))
@@ -22,6 +22,10 @@ const OTPInput = () => {
         newArr[index] = value;
 
         setotpValue(newArr);
+
+    if(newArr.every((digit) => digit !== "")) {
+        onOtpComplete(newArr.join(""));
+    }
 
         value && inputRefs.current[index+1]?.focus();
    }
