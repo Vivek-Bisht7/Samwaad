@@ -12,7 +12,7 @@ const UserAuth = () => {
   //to disable OTP button
   const [otpBtnStatus, setotpBtnStatus] = useState(false);
   const [otpBtnText, setotpBtnText] = useState("Get OTP");
-  
+
   //to disable verify button
   const [getOTP, setgetOTP] = useState(false);
   const [verify, setverify] = useState(true);
@@ -43,11 +43,9 @@ const UserAuth = () => {
           toast.info("OTP has been sent to your Mail");
           setotpBtnStatus(true);
           setgetOTP(true);
-        } 
-        else if(res.data.message==="Email is already taken"){
+        } else if (res.data.message === "Email is already taken") {
           toast.error("Email is already taken");
-        }
-        else {
+        } else {
           toast.error("Something went wrong");
         }
       })
@@ -61,33 +59,37 @@ const UserAuth = () => {
     setverify(false);
   };
 
-  const registerHandler = async (e)=>{
-
+  const registerHandler = async (e) => {
     e.preventDefault();
-    
-    if(userName && userEmail && userPassword && verificationStatus){
-      try{
-        const res = await axios.post("http://localhost:3000/api/user/register",{userName,userEmail,userPassword});
 
-        if(res.data.success===false && res.data.message==="Username already exists"){
+    if (userName && userEmail && userPassword && verificationStatus) {
+      try {
+        const res = await axios.post(
+          "http://localhost:3000/api/user/register",
+          { userName, userEmail, userPassword }
+        );
+
+        if (
+          res.data.success === false &&
+          res.data.message === "Username already exists"
+        ) {
           return toast.error("UserName already exists");
         }
         setverificationStatus(false);
         setstatus(true);
-      }
-      catch(err){
+      } catch (err) {
         console.log("Error : " + err.message);
       }
     }
-    
-    
-  }
+  };
 
   const verificationHandler = async () => {
-
-    const res = await axios.post("http://localhost:3000/api/otp/verify",{userEmail,OTP});
-
     try {
+      const res = await axios.post("http://localhost:3000/api/otp/verify", {
+        userEmail,
+        OTP,
+      });
+
       if (res.data.success === true) {
         toast.success("Verified Successfully", {
           position: "top-center",
@@ -103,14 +105,10 @@ const UserAuth = () => {
         setloginEmail(userEmail);
         setloginPassword(userPassword);
         setverificationStatus(true);
-      } 
-      else if(res.data.success===false && res.data.message==="Time limit exceeded"){
-        setotpBtnStatus(false);
-        setotpBtnText("Resend OTP");
-        toast.error("OTP Timeout")
       }
-      else {
-        toast.error("Invalid OTP", {
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        toast.error(err.response.data.message, {
           position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
@@ -119,9 +117,12 @@ const UserAuth = () => {
           draggable: true,
           theme: "light",
         });
+
+        if (err.response.data.message === "Time limit exceeded") {
+          setotpBtnStatus(false);
+          setotpBtnText("Resend OTP");
+        }
       }
-    } catch (err) {
-      console.error("ERROR : " + err.message);
     }
   };
 
@@ -234,7 +235,9 @@ const UserAuth = () => {
                   className="w-full ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full hover:bg-[#4CAF93] hover:text-white"
                   type="button"
                   onClick={sendOTP}
-                  disabled={!userName || !emailRegex.test(userEmail) || otpBtnStatus}
+                  disabled={
+                    !userName || !emailRegex.test(userEmail) || otpBtnStatus
+                  }
                 >
                   {otpBtnText}
                 </button>
@@ -269,7 +272,11 @@ const UserAuth = () => {
                 required
               />
 
-              <button className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer" type="button" onClick={registerHandler}>
+              <button
+                className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer"
+                type="button"
+                onClick={registerHandler}
+              >
                 Register
               </button>
             </div>

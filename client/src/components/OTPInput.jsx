@@ -1,53 +1,57 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
 
-const OTPInput = ({onOtpComplete}) => {
-   const OTPSize = 4;
+const OTPInput = ({ onOtpComplete }) => {
+  const OTPSize = 5;
 
-   const [otpValue, setotpValue] = useState(new Array(OTPSize).fill(""))
+  const [otpValue, setotpValue] = useState(new Array(OTPSize).fill(""));
 
-   const inputRefs = useRef([]);
+  const inputRefs = useRef([]);
 
-   useEffect(() => {
-        inputRefs.current[0]?.focus();
-   }, [])
-   
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
 
-   const inputChangeHandler = (value,index)=>{
-        if(isNaN(value)) return;
-        
-        const newArr = [...otpValue];
+  const inputChangeHandler = (value, index) => {
+    if (isNaN(value)) return;
 
-        value = value.trim().slice(-1);
+    const newArr = [...otpValue];
 
-        newArr[index] = value;
+    value = value.trim().slice(-1);
 
-        setotpValue(newArr);
+    newArr[index] = value;
 
-    if(newArr.every((digit) => digit !== "")) {
-        onOtpComplete(newArr.join(""));
+    setotpValue(newArr);
+
+    if (newArr.every((digit) => digit !== "")) {
+      onOtpComplete(newArr.join(""));
     }
 
-        value && inputRefs.current[index+1]?.focus();
-   }
+    value && inputRefs.current[index + 1]?.focus();
+  };
 
-   const onKeyDownHandler = (e,index)=>{
-      if(!e.target.value && e.code==="Backspace"){
-        inputRefs.current[index-1]?.focus();
-      }
-      
-   }
-
+  const onKeyDownHandler = (e, index) => {
+    if (!e.target.value && e.code === "Backspace") {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
 
   return (
     <div>
-        {otpValue.map((input,index)=>(
-            <input key={index} type="text" className='border rounded-md w-[3vw] h-[3vw] bg-[#4CAF93] text-[#FAFAFA] outline-none font-bold text-center' value={otpValue[index]} onChange={(e)=>inputChangeHandler(e.target.value,index)}
-            ref={(element) => inputRefs.current[index] = element}
-            onKeyDown={(e)=>{onKeyDownHandler(e,index)}}
-            />
-        ))}
+      {otpValue.map((input, index) => (
+        <input
+          key={index}
+          type="text"
+          className="border rounded-md w-[3vw] h-[3vw] bg-[#4CAF93] text-[#FAFAFA] outline-none font-bold text-center"
+          value={otpValue[index]}
+          onChange={(e) => inputChangeHandler(e.target.value, index)}
+          ref={(element) => (inputRefs.current[index] = element)}
+          onKeyDown={(e) => {
+            onKeyDownHandler(e, index);
+          }}
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default OTPInput
+export default OTPInput;

@@ -1,5 +1,5 @@
 const TempUser = require("../models/tempUser");
-const User = require('../models/user');
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
@@ -112,22 +112,19 @@ const createTempUser = async (req, res) => {
   const hashedOTP = await bcrypt.hash(String(otp), 10);
 
   try {
-    const user = await User.findOne({userEmail});
+    const user = await User.findOne({ userEmail });
 
-    if(user){
-      return res.json({"message":"Email is already taken"});
+    if (user) {
+      return res.json({ message: "Email is already taken" });
     }
 
     const temporaryUser = await TempUser.findOne({ email: userEmail });
 
     if (temporaryUser) {
-
       temporaryUser.hashedOTP = hashedOTP;
       temporaryUser.otpExpiresAt = Date.now();
       await temporaryUser.save();
-      
-    } 
-    else {
+    } else {
       await TempUser.create({
         email: userEmail,
         hashedOTP,
@@ -150,27 +147,38 @@ const verifyOTP = async (req, res) => {
   try {
     const temporaryUser = await TempUser.findOne({ email: userEmail });
 
-    bcrypt.compare(OTP, temporaryUser.hashedOTP, async function (err, result) {
-      if (result === true) {
-        if (Date.now() - temporaryUser.otpExpiresAt > 1000 * 60 * 5) {
-          return res
-            .status(200)
-            .json({ success:false, message: "Time limit exceeded" });
-        }
-        temporaryUser.isVerified = true;
-        await temporaryUser.save();
+    if (!temporaryUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
 
-        return res
-          .status(200)
-          .json({ success: true, message:"OTP matched successfully" });
-      } else {
-        return res
-          .status(400)
-          .json({ success: false, message: "OTP did not matched" });
-      }
-    });
+    const otpMatch = await bcrypt.compare(OTP, temporaryUser.hashedOTP);
+
+    if (!otpMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP did not matched" });
+    }
+
+    if (Date.now() > temporaryUser.otpExpiresAt) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Time limit exceeded" });
+    }
+
+    temporaryUser.isVerified = true;
+    await temporaryUser.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP matched successfully" });
   } catch (err) {
-    console.error("Error : " + err.message);
+    console.log("Error : " + err.message);
+
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
 
