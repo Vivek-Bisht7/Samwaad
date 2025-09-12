@@ -108,7 +108,7 @@ const createTempUser = async (req, res) => {
       .status(400)
       .json({ success: false, message: "Email is missing" });
 
-  const otp = 1000 + Math.floor(Math.random() * 9000);
+  const otp = 10000 + Math.floor(Math.random() * 90000);
   const hashedOTP = await bcrypt.hash(String(otp), 10);
 
   try {
@@ -122,7 +122,7 @@ const createTempUser = async (req, res) => {
 
     if (temporaryUser) {
       temporaryUser.hashedOTP = hashedOTP;
-      temporaryUser.otpExpiresAt = Date.now();
+      temporaryUser.otpExpiresAt = Date.now() + 1000*60*5;
       await temporaryUser.save();
     } else {
       await TempUser.create({
