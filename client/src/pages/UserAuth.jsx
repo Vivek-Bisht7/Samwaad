@@ -32,22 +32,28 @@ const UserAuth = () => {
   //regex to check correctness of email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  //verfication status
+  const [verificationStatus, setverificationStatus] = useState(false);
+
   const sendOTP = () => {
     axios
       .post("http://localhost:3000/api/otp", { userEmail })
       .then(function (res) {
         if (res.data.success === true) {
           toast.info("OTP has been sent to your Mail");
-          verificationHandler;
-        } else {
+          setotpBtnStatus(true);
+          setgetOTP(true);
+        } 
+        else if(res.data.message==="Email is already taken"){
+          toast.error("Email is already taken");
+        }
+        else {
           toast.error("Something went wrong");
         }
       })
       .catch(function (err) {
         console.log(err);
       });
-    setotpBtnStatus(true);
-    setgetOTP(true);
   };
 
   const otpSetter = (data) => {
@@ -55,14 +61,34 @@ const UserAuth = () => {
     setverify(false);
   };
 
+  const registerHandler = async (e)=>{
+
+    e.preventDefault();
+    
+    if(userName && userEmail && userPassword && verificationStatus){
+      try{
+        const res = await axios.post("http://localhost:3000/api/user/register",{userName,userEmail,userPassword});
+
+        if(res.data.success===false && res.data.message==="Username already exists"){
+          return toast.error("UserName already exists");
+        }
+        setverificationStatus(false);
+        setstatus(true);
+      }
+      catch(err){
+        console.log("Error : " + err.message);
+      }
+    }
+    
+    
+  }
+
   const verificationHandler = async () => {
 
     const res = await axios.post("http://localhost:3000/api/otp/verify",{userEmail,OTP});
 
-    console.log(res);
-    
     try {
-      if (res.data.success === "true") {
+      if (res.data.success === true) {
         toast.success("Verified Successfully", {
           position: "top-center",
           autoClose: 1000,
@@ -76,8 +102,9 @@ const UserAuth = () => {
         setotpBtnText("Verified");
         setloginEmail(userEmail);
         setloginPassword(userPassword);
+        setverificationStatus(true);
       } 
-      else if(res.data.success==="false" && res.data.message==="Time limit exceeded"){
+      else if(res.data.success===false && res.data.message==="Time limit exceeded"){
         setotpBtnStatus(false);
         setotpBtnText("Resend OTP");
         toast.error("OTP Timeout")
@@ -181,7 +208,7 @@ const UserAuth = () => {
             <div className="w-full">
               <input
                 type="text"
-                placeholder="Enter Name"
+                placeholder="Enter User Name (Unique)"
                 value={userName}
                 onChange={(e) => {
                   setuserName(e.target.value);
@@ -242,7 +269,7 @@ const UserAuth = () => {
                 required
               />
 
-              <button className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer ">
+              <button className="bg-[#4CAF93] text-white w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer" type="button" onClick={registerHandler}>
                 Register
               </button>
             </div>
