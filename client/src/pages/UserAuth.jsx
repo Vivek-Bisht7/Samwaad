@@ -36,6 +36,19 @@ const UserAuth = () => {
   const [verificationStatus, setverificationStatus] = useState(false);
 
   const sendOTP = () => {
+
+    if(otpBtnStatus){
+      return;
+    }
+    if(!userEmail){
+      toast.error("Email is required");
+      return;
+    }
+    if(!emailRegex.test(userEmail)){
+      toast.error("Enter a valid Email");
+      return;
+    }
+
     axios
       .post("http://localhost:3000/api/otp", { userEmail })
       .then(function (res) {
@@ -50,7 +63,8 @@ const UserAuth = () => {
         }
       })
       .catch(function (err) {
-        console.log(err);
+          toast.error(err.response.data.message);
+          console.error(err.message);
       });
   };
 
@@ -61,8 +75,31 @@ const UserAuth = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
+    
+    if(!verificationStatus){
+      toast.error("User not verified")
+      return;
+    }
 
-    if (userName && userEmail && userPassword && verificationStatus) {
+    if (!userName){
+      toast.error("Username is required");
+      return;
+    } 
+
+    if(!userEmail){
+      toast.error("Email is required");
+      return;
+    }
+
+    if(!userPassword){
+      toast.error("Password is required");
+      return;
+    }
+
+    if(userName.includes(" ")){
+      toast.error("Spaces are not allowd in username");
+      return;
+    }
       try {
         const res = await axios.post(
           "http://localhost:3000/api/user/register",
@@ -78,9 +115,10 @@ const UserAuth = () => {
         setverificationStatus(false);
         setstatus(true);
       } catch (err) {
+        toast.error(err.response.data.message);
         console.log("Error : " + err.message);
       }
-    }
+    
   };
 
   const verificationHandler = async () => {
@@ -125,6 +163,35 @@ const UserAuth = () => {
       }
     }
   };
+
+  const loginHandler =async (e)=>{
+    e.preventDefault();
+
+    if(!loginEmail){
+      toast.error("Email is reqired");
+      return;
+    }
+    if(!loginPassword){
+      toast.error("Password is reqired");
+      return;
+    }
+    if(!emailRegex.test(loginEmail)){
+      toast.error("Password is reqired");
+      return;
+    }
+
+    try{
+      const res = await axios.post("http://localhost:3000/api/user/login",{loginEmail,loginPassword},{withCredentials: true});
+
+      if(res.status===200) console.log("Successful");
+      
+      
+    }
+    catch(error){
+      toast.error(error.response.data.message)
+    }
+
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -199,7 +266,7 @@ const UserAuth = () => {
                 required
               />
 
-              <button className="bg-[#4CAF93] text-white  w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer">
+              <button className="bg-[#4CAF93] text-white  w-full h-[6vh] font-semibold rounded-md mt-4 cursor-pointer" type="button" onClick={loginHandler}>
                 Login
               </button>
             </div>
@@ -209,7 +276,7 @@ const UserAuth = () => {
             <div className="w-full">
               <input
                 type="text"
-                placeholder="Enter User Name (Unique)"
+                placeholder="Enter User Name (Unique & No spaces)"
                 value={userName}
                 onChange={(e) => {
                   setuserName(e.target.value);
@@ -230,14 +297,12 @@ const UserAuth = () => {
                   className="min-w-3/4  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121]  h-full"
                   autoComplete="off"
                   required
+                  disabled={verificationStatus}
                 />
                 <button
                   className="w-full ml-2 rounded-md border-2 border-[#4CAF93] text-[#212121] cursor-pointer h-full hover:bg-[#4CAF93] hover:text-white"
                   type="button"
                   onClick={sendOTP}
-                  disabled={
-                    !userName || !emailRegex.test(userEmail) || otpBtnStatus
-                  }
                 >
                   {otpBtnText}
                 </button>
