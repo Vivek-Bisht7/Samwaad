@@ -1,12 +1,11 @@
 import React from 'react'
 import UserAuth from './pages/UserAuth'
-import OTPInput from './components/OTPInput'
-import Timer from './components/Timer'
+import ChatPage from './pages/ChatPage'
 
 const App = () => {
   return (
     <div>
-      <UserAuth/>
+      <ChatPage/>
     </div>
   )
 }
