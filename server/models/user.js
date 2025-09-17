@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:"",
     },
+    userImage:{
+        type:String,
+        default:"/Images/userImage.webp",
+    },
 },{timestamps:true})
 
 module.exports = mongoose.model("User",userSchema);
