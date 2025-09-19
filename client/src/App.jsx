@@ -5,7 +5,7 @@ import ChatPage from './pages/ChatPage'
 const App = () => {
   return (
     <div>
-      <ChatPage/>
+      <UserAuth/>
     </div>
   )
 }
