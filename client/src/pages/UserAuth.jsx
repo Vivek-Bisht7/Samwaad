@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import OTPInput from "../components/OTPInput";
 import Timer from "../components/Timer";
-import axios from "axios";
+import axios from "../utils/axios";
 import { ToastContainer, toast, Bounce } from "react-toastify";
+import {Link,useNavigate} from 'react-router-dom';
+
 
 const UserAuth = () => {
+  const navigate = useNavigate();
+
   //To toggle between Login and Register button
   const [status, setstatus] = useState(true);
 
@@ -50,7 +54,7 @@ const UserAuth = () => {
     }
 
     axios
-      .post("http://localhost:3000/api/otp", { userEmail })
+      .post("/otp", { userEmail })
       .then(function (res) {
         if (res.data.success === true) {
           toast.info("OTP has been sent to your Mail");
@@ -102,7 +106,7 @@ const UserAuth = () => {
     }
       try {
         const res = await axios.post(
-          "http://localhost:3000/api/user/register",
+          "/user/register",
           { userName, userEmail, userPassword }
         );
 
@@ -123,7 +127,7 @@ const UserAuth = () => {
 
   const verificationHandler = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/otp/verify", {
+      const res = await axios.post("/otp/verify", {
         userEmail,
         OTP,
       });
@@ -165,25 +169,28 @@ const UserAuth = () => {
   };
 
   const loginHandler =async (e)=>{
+    
     e.preventDefault();
 
     if(!loginEmail){
-      toast.error("Email is reqired");
+      toast.error("Email is required");
       return;
     }
     if(!loginPassword){
-      toast.error("Password is reqired");
+      toast.error("Password is required");
       return;
     }
     if(!emailRegex.test(loginEmail)){
-      toast.error("Password is reqired");
+      toast.error("Enter correct E-mail");
       return;
     }
 
     try{
-      const res = await axios.post("http://localhost:3000/api/user/login",{loginEmail,loginPassword},{withCredentials: true});
+      const res = await axios.post("/user/login",{loginEmail,loginPassword});
 
-      if(res.status===200) console.log("Successful");
+      if(res.status===200){
+        navigate("/");
+      }
       
       
     }

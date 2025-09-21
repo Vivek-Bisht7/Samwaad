@@ -85,7 +85,7 @@ const loginUser = async (req, res) => {
     const refreshToken = jwt.sign(
       { id: user._id },
       process.env.REFRESH_SECRET,
-      { expiresIn: "30d" }
+      { expiresIn: "60d" }
     );
 
     user.refreshToken = refreshToken;
@@ -95,14 +95,14 @@ const loginUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 60 * 15,
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 5 * 60 * 1000,
+      maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
     return res.status(200).json({ success: true, message: "OK" });
