@@ -106,7 +106,6 @@ const loginUser = async (req, res) => {
     });
 
     return res.status(200).json({ success: true, message: "OK" });
-
   } catch (err) {
     console.log("Error : " + err.message);
     return res
@@ -115,32 +114,63 @@ const loginUser = async (req, res) => {
   }
 };
 
-const handleRefreshToken = (req,res)=>{
-  const {refreshToken} = req.cookies;
+const handleRefreshToken = (req, res) => {
+  const { refreshToken } = req.cookies;
 
-  if(!refreshToken) return res.status(403).json({message:"Invalid or expired refresh token"});
+  if (!refreshToken)
+    return res
+      .status(403)
+      .json({ message: "Invalid or expired refresh token" });
 
-  jwt.verify(refreshToken , process.env.REFRESH_SECRET ,async (err,decoded)=>{
-    if(err) return res.status(403).json({message:"Refresh token not valid"});
+  jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err, decoded) => {
+    if (err)
+      return res.status(403).json({ message: "Refresh token not valid" });
 
     const user = await User.findById(decoded.id);
 
-    if(!user || !(user.refreshToken)){
-      return res.status(403).json({message:"Refresh token not valid"});
+    if (!user || !user.refreshToken) {
+      return res.status(403).json({ message: "Refresh token not valid" });
     }
 
-    const newAccessToken = jwt.sign({id:user._id},process.env.ACCESS_SECRET , {expiresIn:"15m"});
+    const newAccessToken = jwt.sign(
+      { id: user._id },
+      process.env.ACCESS_SECRET,
+      { expiresIn: "15m" }
+    );
 
-    res.cookie("accessToken",newAccessToken,{
+    res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 20000,
-    })
+    });
 
     return res.json({ success: true, message: "Access token refreshed" });
+  });
+};
+
+const handleLogout = (req,res) =>{
+  try{
+     res.cookie("accessToken", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "development",
+    sameSite: "Strict",
+    expires: new Date(0), 
+  });
+
+  res.cookie("refreshToken", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "development",
+    sameSite: "Strict",
+    expires: new Date(0),
   })
 
+  return res.status(200).json("Logout successfull");
+  }
+  catch(err){
+    console.error("Error : " + err.message);
+    return res.status(500).json({success:false,message:"Error : " + err.message});
+  }
 }
 
-module.exports = { registerUser, loginUser ,handleRefreshToken};
+module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout};

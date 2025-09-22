@@ -6,8 +6,10 @@ import axios from "../utils/axios";
 const Users = () => {
 
   const [allChats, setallChats] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    
     axios.get("/chat")
       .then((res)=>{
         setallChats(res.data.chats);
