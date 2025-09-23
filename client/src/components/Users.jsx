@@ -4,24 +4,20 @@ import UserChat from "./UserChat";
 import axios from "../utils/axios";
 
 const Users = () => {
-
   const [allChats, setallChats] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [selectedChat, setselectedChat] = useState(null);
 
   useEffect(() => {
-    
-    axios.get("/chat")
-      .then((res)=>{
+    axios
+      .get("/chat")
+      .then((res) => {
         setallChats(res.data.chats);
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.error("Error : " + error.message);
-      })
+      });
+  }, []);
   
-  }, [])
-  
-console.log(allChats);
-
   return (
     <div className="w-[35%] bg-gray-50 overflow-y-auto">
       <div className="px-2 py-3 space-y-3">
@@ -39,11 +35,18 @@ console.log(allChats);
           </form>
         </div>
 
-        
-      
-       
-
+        {allChats.map((user, index) => (
+          <UserChat
+            key={index}
+            chatName={user.chatName}
+            latestMessage={user.latestMessage?.content}
+            onClick={()=>setselectedChat(user)}
+          />
+        ))}
       </div>
+
+
+
     </div>
   );
 };

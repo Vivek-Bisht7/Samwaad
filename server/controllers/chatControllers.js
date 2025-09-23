@@ -31,6 +31,10 @@ const createChat = async (req, res) => {
   }
 };
 
+const getOtherUser = (users , loggedInUser) => {
+  return users.find((u)=> u._id.toString() !== loggedInUser.toString());
+}
+
 const getAllChat = async (req, res) => {
   try {
     const currentUser = req.user.id;
@@ -39,6 +43,21 @@ const getAllChat = async (req, res) => {
         .populate("users" , "userName userImage")
         .populate("latestMessage" , "content createdAt")
         .sort({ updatedAt: -1 });
+
+
+    chats = chats.map((chat)=>{
+
+      if(!chat.isGroupChat){
+        const otherUser = getOtherUser(chat.users,currentUser);
+
+        return{
+          ...chat.toObject(),
+          chatName : otherUser.userName,
+          
+        }
+      }
+      return chat;
+    })
 
     return res.status(201).json({ success: true, chats });
 
