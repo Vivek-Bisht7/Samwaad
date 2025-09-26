@@ -105,7 +105,8 @@ const loginUser = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
-    return res.status(200).json({ success: true, message: "OK" });
+    return res.status(200).json({ success: true, message: "OK" ,});
+
   } catch (err) {
     console.log("Error : " + err.message);
     return res
@@ -173,4 +174,9 @@ const handleLogout = (req,res) =>{
   }
 }
 
-module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout};
+const getCurrentUser = (req,res) =>{
+  const user = req.user.id;
+  res.send({user});
+}
+
+module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser};

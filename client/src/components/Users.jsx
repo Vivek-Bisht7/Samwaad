@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useContext} from "react";
+import { ChatContext } from "../contexts/ChatContext";
 import { IoSearch } from "react-icons/io5";
 import UserChat from "./UserChat";
 import axios from "../utils/axios";
 
 const Users = () => {
   const [allChats, setallChats] = useState([]);
-  const [selectedChat, setselectedChat] = useState(null);
 
   useEffect(() => {
     axios
@@ -17,6 +17,12 @@ const Users = () => {
         console.error("Error : " + error.message);
       });
   }, []);
+
+  const {selectedChat,setselectedChat} = useContext(ChatContext);
+
+  const temp = (user)=>{
+    setselectedChat(user);
+  }
   
   return (
     <div className="w-[35%] bg-gray-50 overflow-y-auto">
@@ -40,7 +46,7 @@ const Users = () => {
             key={index}
             chatName={user.chatName}
             latestMessage={user.latestMessage?.content}
-            onClick={()=>setselectedChat(user)}
+            onClick={(()=>temp(user))}
           />
         ))}
       </div>

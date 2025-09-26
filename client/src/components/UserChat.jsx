@@ -1,9 +1,9 @@
 import React from 'react'
 
-const UserChat = ({chatName , latestMessage}) => {
+const UserChat = ({chatName , latestMessage ,onClick}) => {
   return (
     <>
-        <div className="h-[12vh] w-full rounded px-2 hover:bg-gray-200 py-2 flex">
+        <div className="h-[12vh] w-full rounded px-2 hover:bg-gray-200 py-2 flex" onClick={onClick}>
             <div className="h-[9vh] ">
                 <img src="/public/Images/userImage.webp" alt="User Image" className="h-full rounded-full"/>
             </div>

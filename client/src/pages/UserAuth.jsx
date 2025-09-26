@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
 import OTPInput from "../components/OTPInput";
 import Timer from "../components/Timer";
 import axios from "../utils/axios";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import {Link,useNavigate} from 'react-router-dom';
-
 
 const UserAuth = () => {
   const navigate = useNavigate();
