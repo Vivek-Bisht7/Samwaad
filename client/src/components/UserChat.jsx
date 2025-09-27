@@ -5,7 +5,7 @@ const UserChat = ({chatName , latestMessage ,onClick}) => {
     <>
         <div className="h-[12vh] w-full rounded px-2 hover:bg-gray-200 py-2 flex" onClick={onClick}>
             <div className="h-[9vh] ">
-                <img src="/public/Images/userImage.webp" alt="User Image" className="h-full rounded-full"/>
+                <img src="/Images/userImage.png" alt="User Image" className="h-full rounded-full"/>
             </div>
 
             <div className="px-4 flex-1 justify-center flex-col">

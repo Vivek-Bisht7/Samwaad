@@ -12,6 +12,7 @@ const Chat = () => {
 
   const [currentUser, setcurrentUser] = useState();
   const [messages, setmessages] = useState();
+  const [content, setcontent] = useState();
 
   // used to fetch current user using backend
   useEffect(() => {
@@ -40,6 +41,20 @@ const Chat = () => {
     }
   }, [selectedChat]);
 
+  const sendMessage = async (e)=>{
+    e.preventDefault();
+    
+    try{
+      const res = await axios.post('/message',{chatId:selectedChat._id,content});
+      setcontent("");
+    }
+    catch(error){
+      console.log("Error : " + err.message);
+      return res.status(500).json({success:false,Error:error.message})
+    }
+
+  }
+
   return selectedChat ? (
     <div className="w-[65%] bg-white px-2 pt-2 flex flex-col">
       {/*header*/}
@@ -47,7 +62,7 @@ const Chat = () => {
       <div className="h-[10vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
         <div className="h-full flex items-center gap-2">
           <img
-            src="/public/Images/userImage.webp"
+            src="/Images/userImage.png"
             alt="User Image"
             className="h-full rounded-full"
           />
@@ -65,24 +80,24 @@ const Chat = () => {
 
       {/*messages*/}
       <div className="flex-1  overflow-y-auto px-2 py-3 space-y-3">
-        {messages && messages.map((message) => {
+        {messages &&
+          messages.map((message) => {
+            const isCurrentUser = currentUser?.user === message.sender;
 
-          const isCurrentUser = currentUser?.user === message.sender;
-
-          return isCurrentUser ? (
-            <div key={message._id} className="flex justify-end">
-              <div className="flex bg-[#4CAF93] px-3 py-2 rounded-xl max-w-[60%] text-[#FFFFFF]">
-                {message.content}
+            return isCurrentUser ? (
+              <div key={message._id} className="flex justify-end">
+                <div className="flex bg-[#4CAF93] px-3 py-2 rounded-xl max-w-[60%] text-[#FFFFFF]">
+                  {message.content}
+                </div>
               </div>
-            </div>
-          ) : (
-            <div key={message._id} className="flex">
-              <div className="flex bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-xl max-w-[60%]">
-                {message.content}
+            ) : (
+              <div key={message._id} className="flex">
+                <div className="flex bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-xl max-w-[60%]">
+                  {message.content}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            );
+          })}
       </div>
       {/*messages over*/}
 
@@ -97,24 +112,27 @@ const Chat = () => {
             <GoPaperclip />
           </button>
         </div>
-        <form action="" className="flex flex-1 items-center mx-2">
+        <form  className="flex flex-1 items-center mx-2" onSubmit={sendMessage}>
           <textarea
             name=""
             ref={typeMessageRef}
             rows={1}
             className="flex-1 w-full max-h-28 min-h-[30px] resize-none outline-none px-3"
+            value={content}
             placeholder="Type a message"
             onChange={(e) => {
               e.target.style.height = "auto";
               e.target.style.height = e.target.scrollHeight + "px";
+              setcontent(e.target.value);
             }}
           ></textarea>
+
+          <div className="flex items-center text-2xl p-1">
+            <button className="cursor-pointer h-10 w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm">
+              <IoSend />
+            </button>
+          </div>
         </form>
-        <div className="flex items-center text-2xl p-1">
-          <button className="cursor-pointer h-10 w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm">
-            <IoSend />
-          </button>
-        </div>
       </div>
 
       {/*Type message over*/}

@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     userImage:{
         type:String,
-        default:"/Images/userImage.webp",
+        default:"/Images/userImage.png",
     },
 },{timestamps:true})
 
