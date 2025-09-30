@@ -21,6 +21,24 @@ const io = new Server(server, {
 require("dotenv").config();
 dbConnection();
 
+io.on("connection" , (socket)=>{
+  console.log("User connected : " + socket.id);
+
+  socket.on("joinChat" , (chatId)=>{
+    socket.join(chatId);
+    console.log(`User ${socket.id} joined chat : ${chatId}`);
+  })
+
+  socket.on("newMessage",(message)=>{
+    socket.to(message.chatId).emit("messageReceived" , message);
+  })
+
+  socket.on("disconnect" , ()=>{
+    console.log("User Disconnected : "+  socket.id);
+  })
+
+})
+
 app.use(cookieParser());
 app.use(
   cors({
