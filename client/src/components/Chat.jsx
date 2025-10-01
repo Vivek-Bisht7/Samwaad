@@ -7,7 +7,6 @@ import { ChatContext } from "../contexts/ChatContext";
 import axios from "../utils/axios";
 import socket from "../utils/socket";
 
-
 const Chat = () => {
   const typeMessageRef = useRef(null);
   const bottomMessageRef = useRef(null);
@@ -16,6 +15,9 @@ const Chat = () => {
   const [currentUser, setcurrentUser] = useState();
   const [messages, setmessages] = useState();
   const [content, setcontent] = useState();
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState();
+  const typingTimeoutRef = useRef(null);
 
   // Used to fetch current user using backend
   useEffect(() => {
@@ -47,33 +49,52 @@ const Chat = () => {
 
   // For realtime messaging
   useEffect(() => {
-  const handleMessage = (message) => {
-    
-    if (message.chatId === selectedChat?._id) {
-      setmessages((prev) => [...prev, message]);
-    }
-  };
+    const handleMessage = (message) => {
+      if (message.chatId === selectedChat?._id) {
+        setmessages((prev) => [...prev, message]);
+      }
+    };
 
-  socket.on("messageReceived", handleMessage);
+    socket.on("messageReceived", handleMessage);
 
-  // cleanup to avoid duplicate listeners
-  return () => {
-    socket.off("messageReceived", handleMessage);
-  };
-}, [selectedChat]);
-
+    // cleanup to avoid duplicate listeners
+    return () => {
+      socket.off("messageReceived", handleMessage);
+    };
+  }, [selectedChat]);
 
   // For auto scrolling messages
   useEffect(() => {
-    if(messages?.length){
-      bottomMessageRef.current?.scrollIntoView({behaviour:"smooth",block:"end"});
+    if (messages?.length) {
+      bottomMessageRef.current?.scrollIntoView({
+        behaviour: "smooth",
+        block: "end",
+      });
     }
-  }, [messages])
-  
+  }, [messages, typingUser]);
 
+  // For Knowing typing status
+  useEffect(() => {
+    if (!selectedChat?._id) return;
+
+    socket.on("typing", (user) => {
+      setTypingUser(user);
+    });
+
+    socket.on("stopTyping", () => {
+      setTypingUser();
+    });
+
+    return () => {
+      socket.off("typing");
+      socket.off("stopTyping");
+    };
+  }, [selectedChat]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
+
+    if (!content.trim()) return;
 
     const message = {
       chatId: selectedChat._id,
@@ -90,12 +111,51 @@ const Chat = () => {
 
       socket.emit("newMessage", message);
       setmessages((prev) => [...prev, message]);
-
+      socket.emit("stopTyping", {
+        chatId: selectedChat._id,
+        user: currentUser,
+      });
+      setIsTyping(false);
       setcontent("");
+      typeMessageRef.current.style.height = "30px";
     } catch (error) {
       console.log("Error : " + error.message);
     }
   };
+
+  const typingIndicator = (e) => {
+    if (!isTyping) {
+      socket.emit("typing", { chatId: selectedChat._id, user: currentUser });
+      setIsTyping(true);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stopTyping", {
+        chatId: selectedChat._id,
+        user: currentUser,
+      });
+      setIsTyping(false);
+    }, 2000);
+  };
+
+  const TypingIndicatorVisual = () => (
+    <div className="flex items-center space-x-2 mx-2 h-6">
+      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping"></span>
+      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping delay-300"></span>
+      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping delay-600"></span>
+    </div>
+  );
+
+  const handleTextarea = (e)=>{
+    setcontent(e.target.value);
+    typingIndicator(e);
+    typeMessageRef.current.style.height = "auto";
+    typeMessageRef.current.style.height = typeMessageRef.current.scrollHeight + "px";      
+  }
 
   return selectedChat ? (
     <div className="w-[65%] bg-white px-2 pt-2 flex flex-col">
@@ -123,7 +183,7 @@ const Chat = () => {
       {/*messages*/}
       <div className="flex-1  overflow-y-auto px-2 py-3 space-y-3">
         {messages &&
-          messages.map((message,idx) => {
+          messages.map((message, idx) => {
             const isCurrentUser = currentUser?.user === message.sender;
 
             return isCurrentUser ? (
@@ -140,7 +200,8 @@ const Chat = () => {
               </div>
             );
           })}
-          <div ref={bottomMessageRef}></div>
+        <div>{typingUser && TypingIndicatorVisual()}</div>
+        <div ref={bottomMessageRef}></div>
       </div>
       {/*messages over*/}
 
@@ -163,10 +224,11 @@ const Chat = () => {
             className="flex-1 w-full max-h-28 min-h-[30px] resize-none outline-none px-3"
             value={content}
             placeholder="Type a message"
-            onChange={(e) => {
-              e.target.style.height = "auto";
-              e.target.style.height = e.target.scrollHeight + "px";
-              setcontent(e.target.value);
+            onChange={(e) => { handleTextarea(e)}}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendMessage(e);
+              }
             }}
           ></textarea>
 

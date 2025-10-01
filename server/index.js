@@ -33,6 +33,19 @@ io.on("connection" , (socket)=>{
     socket.to(message.chatId).emit("messageReceived" , message);
   })
 
+  socket.on("leaveChat",(chatId)=>{
+    socket.leave(chatId);
+    console.log(`${socket.id} left room: ${chatId}`);
+  })
+
+  socket.on("typing" , ({chatId , user})=>{
+    socket.to(chatId).emit("typing",user);
+  });
+
+  socket.on("stopTyping" , ({chatId , user})=>{
+    socket.to(chatId).emit("stopTyping",user);
+  });
+
   socket.on("disconnect" , ()=>{
     console.log("User Disconnected : "+  socket.id);
   })

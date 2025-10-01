@@ -16,9 +16,12 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (!selectedChat?._id) return;
-    socket.emit("joinChat",selectedChat._id);
-  }, [selectedChat])
-  
+    socket.emit("joinChat", selectedChat._id);
+
+    return () => {
+      if (selectedChat) socket.emit("leaveChat", selectedChat._id);
+    };
+  }, [selectedChat]);
 
   return (
     <ChatContext.Provider value={{ selectedChat, setselectedChat }}>
