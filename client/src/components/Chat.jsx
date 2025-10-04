@@ -156,10 +156,10 @@ const Chat = () => {
   };
 
   const TypingIndicatorVisual = () => (
-    <div className="flex items-center space-x-2 mx-2 h-6">
-      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping"></span>
-      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping delay-300"></span>
-      <span className="w-2 h-2 bg-gray-500 rounded-full animate-ping delay-600"></span>
+    <div className="flex items-center justify-center space-x-2 mx-2 h-6 bg-gray-300 rounded-2xl w-[15%]">
+      <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce"></span>
+      <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-300"></span>
+      <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-600"></span>
     </div>
   );
 
