@@ -21,6 +21,8 @@ const io = new Server(server, {
 require("dotenv").config();
 dbConnection();
 
+const OnlineUsers = new Map();
+
 io.on("connection" , (socket)=>{
   console.log("User connected : " + socket.id);
 
@@ -35,7 +37,7 @@ io.on("connection" , (socket)=>{
 
   socket.on("leaveChat",(chatId)=>{
     socket.leave(chatId);
-    console.log(`${socket.id} left room: ${chatId}`);
+    console.log(`${socket.id} left Chat: ${chatId}`);
   })
 
   socket.on("typing" , ({chatId , user})=>{
@@ -46,8 +48,19 @@ io.on("connection" , (socket)=>{
     socket.to(chatId).emit("stopTyping",user);
   });
 
+  socket.on("UserOnline",(UserId)=>{
+    OnlineUsers.set(socket.id,UserId);
+    io.emit("UpdateUserOnlineStatus",Array.from(OnlineUsers.values()));
+  })
+
   socket.on("disconnect" , ()=>{
     console.log("User Disconnected : "+  socket.id);
+
+    const UserId = OnlineUsers.get(socket.id);
+    if(!UserId) return;
+
+    OnlineUsers.delete(socket.id);
+    io.emit("UpdateUserOnlineStatus",Array.from(OnlineUsers.values()));
   })
 
 })

@@ -6,18 +6,20 @@ import { IoSend } from "react-icons/io5";
 import { ChatContext } from "../contexts/ChatContext";
 import axios from "../utils/axios";
 import socket from "../utils/socket";
+import { UserContext } from "../contexts/UserContext";
 
 const Chat = () => {
   const typeMessageRef = useRef(null);
   const bottomMessageRef = useRef(null);
   const { selectedChat } = useContext(ChatContext);
-
-  const [currentUser, setcurrentUser] = useState();
+  const {setCurrentUser} = useContext(UserContext);
+  const [currentUser, setcurrentUser] = useState(null);
   const [messages, setmessages] = useState();
   const [content, setcontent] = useState();
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState();
   const typingTimeoutRef = useRef(null);
+  const [onlineUsers, setonlineUsers] = useState([]);
 
   // Used to fetch current user using backend
   useEffect(() => {
@@ -30,6 +32,11 @@ const Chat = () => {
         console.error("Error fetching Current User:", err);
       });
   }, []);
+
+  useEffect(() => {
+    setCurrentUser(currentUser);
+  }, [currentUser])
+  
 
   // For getting all messages on every chat click
   useEffect(() => {
@@ -91,6 +98,12 @@ const Chat = () => {
     };
   }, [selectedChat]);
 
+  useEffect(() => {
+    socket.on("UpdateUserOnlineStatus",(users)=>{
+      setonlineUsers(users);
+    })
+  }, [])
+ 
   const sendMessage = async (e) => {
     e.preventDefault();
 
@@ -157,6 +170,13 @@ const Chat = () => {
     typeMessageRef.current.style.height = typeMessageRef.current.scrollHeight + "px";      
   }
 
+  const getOtherUser = (selectedChat, currentUser) => {
+  if (!selectedChat || !currentUser) return null;
+
+  return selectedChat.users.find(user => user._id !== currentUser.user);
+}
+
+  
   return selectedChat ? (
     <div className="w-[65%] bg-white px-2 pt-2 flex flex-col">
       {/*header*/}
@@ -168,8 +188,16 @@ const Chat = () => {
             alt="User Image"
             className="h-full rounded-full"
           />
+          
+          <div>
+            <div className="font-semibold text-md">{selectedChat?.chatName}</div>
+            <div className="text-sm">
+  {onlineUsers.includes(getOtherUser(selectedChat, currentUser)?._id)
+    ? "Online"
+    : "Offline"}
+</div>
 
-          <div className="font-semibold text-md">{selectedChat?.chatName}</div>
+          </div>
         </div>
         <form action="" className="text-2xl flex items-center cursor-pointer">
           <button className="text-2xl flex items-center cursor-pointer">
