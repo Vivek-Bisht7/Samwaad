@@ -9,7 +9,7 @@ const UserChat = ({ chatName, latestMessage, onClick }) => {
       >
         {/* photo , name , message */}
         <div className="flex">
-          <div className="h-[9vh] ">
+          <div className="h-[7vh] ">
             <img
               src="/Images/userImage.jpg"
               alt="User Image"
@@ -27,7 +27,7 @@ const UserChat = ({ chatName, latestMessage, onClick }) => {
         {/* notification and time */}
         <div className="flex flex-col items-end">
           <div>
-            <div className="text-sm text-gray-500">7:45 AM</div>
+            <div className="text-[12px] text-gray-500">7:45 AM</div>
           </div>
           <div>
             <div className="rounded-full bg-[#4CAF93] h-5 w-5 flex items-center justify-center text-white font-semibold text-[12px] mt-1">

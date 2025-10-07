@@ -12,7 +12,7 @@ const Chat = () => {
   const typeMessageRef = useRef(null);
   const bottomMessageRef = useRef(null);
   const { selectedChat } = useContext(ChatContext);
-  const {setCurrentUser} = useContext(UserContext);
+  const { setCurrentUser } = useContext(UserContext);
   const [currentUser, setcurrentUser] = useState(null);
   const [messages, setmessages] = useState();
   const [content, setcontent] = useState();
@@ -20,6 +20,9 @@ const Chat = () => {
   const [typingUser, setTypingUser] = useState();
   const typingTimeoutRef = useRef(null);
   const [onlineUsers, setonlineUsers] = useState([]);
+  const inputRef = useRef(null);
+  const formRef = useRef(null);
+  const [fileStatus, setfileStatus] = useState(false);
 
   // Used to fetch current user using backend
   useEffect(() => {
@@ -35,8 +38,7 @@ const Chat = () => {
 
   useEffect(() => {
     setCurrentUser(currentUser);
-  }, [currentUser])
-  
+  }, [currentUser]);
 
   // For getting all messages on every chat click
   useEffect(() => {
@@ -73,10 +75,12 @@ const Chat = () => {
   // For auto scrolling messages
   useEffect(() => {
     if (messages?.length) {
-      bottomMessageRef.current?.scrollIntoView({
+      setTimeout(() => {
+        bottomMessageRef.current?.scrollIntoView({
         behaviour: "smooth",
         block: "end",
       });
+      }, 500);
     }
   }, [messages, typingUser]);
 
@@ -99,15 +103,21 @@ const Chat = () => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("UpdateUserOnlineStatus",(users)=>{
+    socket.on("UpdateUserOnlineStatus", (users) => {
       setonlineUsers(users);
-    })
-  }, [])
- 
+    });
+  }, []);
+
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    if (!content.trim()) return;
+    if (fileStatus) {
+      formRef.current.requestSubmit();
+      setcontent("");
+      return;
+    }
+
+    if (!fileStatus && !content?.trim()) return;
 
     const message = {
       chatId: selectedChat._id,
@@ -163,40 +173,81 @@ const Chat = () => {
     </div>
   );
 
-  const handleTextarea = (e)=>{
+  const handleTextarea = (e) => {
     setcontent(e.target.value);
     typingIndicator(e);
     typeMessageRef.current.style.height = "auto";
-    typeMessageRef.current.style.height = typeMessageRef.current.scrollHeight + "px";      
-  }
+    typeMessageRef.current.style.height =
+      typeMessageRef.current.scrollHeight + "px";
+  };
 
   const getOtherUser = (selectedChat, currentUser) => {
-  if (!selectedChat || !currentUser) return null;
+    if (!selectedChat || !currentUser) return null;
 
-  return selectedChat.users.find(user => user._id !== currentUser.user);
-}
+    return selectedChat.users.find((user) => user._id !== currentUser.user);
+  };
 
-  
+  const getMessageTime = (time) => {
+    const objTime = new Date(time);
+    const istTime = objTime.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return istTime.toUpperCase();
+  };
+
+  const fileInputHandler = () => {
+    inputRef.current.click();
+  };
+
+  const fileSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!fileStatus) return;
+
+    const file = inputRef.current.files[0];
+
+    const formData = new FormData();
+    formData.append("chatId", selectedChat._id);
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("/message/fileUpload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      socket.emit("newMessage", res.data.newMessage,);
+      setmessages((prev) => [...prev, res.data.newMessage,]);
+      setfileStatus(false);
+    } catch (err) {
+      console.error("Error" + err.message);
+    }
+  };
+
   return selectedChat ? (
     <div className="w-[65%] bg-white px-2 pt-2 flex flex-col">
       {/*header*/}
 
-      <div className="h-[10vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
+      <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
         <div className="h-full flex items-center gap-2">
           <img
-            src="/Images/userImage.png"
+            src="/Images/userImage.jpg"
             alt="User Image"
             className="h-full rounded-full"
           />
-          
-          <div>
-            <div className="font-semibold text-md">{selectedChat?.chatName}</div>
-            <div className="text-sm">
-  {onlineUsers.includes(getOtherUser(selectedChat, currentUser)?._id)
-    ? "Online"
-    : "Offline"}
-</div>
 
+          <div>
+            <div className="font-semibold text-md">
+              {selectedChat?.chatName}
+            </div>
+            <div className="text-sm">
+              {onlineUsers.includes(
+                getOtherUser(selectedChat, currentUser)?._id
+              )
+                ? "Online"
+                : "Offline"}
+            </div>
           </div>
         </div>
         <form action="" className="text-2xl flex items-center cursor-pointer">
@@ -214,16 +265,38 @@ const Chat = () => {
           messages.map((message, idx) => {
             const isCurrentUser = currentUser?.user === message.sender;
 
+            if (message.imageUrl) {
+              return (
+                <div
+                  key={message._id || idx}
+                  className={`flex ${
+                    isCurrentUser ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <img
+                    src={message.imageUrl}
+                    className="max-w-[60%] rounded-2xl"
+                  />
+                </div>
+              );
+            }
+
             return isCurrentUser ? (
               <div key={message._id || idx} className="flex justify-end">
-                <div className="flex bg-[#4CAF93] px-3 py-2 rounded-xl max-w-[60%] text-[#FFFFFF]">
+                <div className="flex gap-4 bg-[#4CAF93] px-3 py-2 rounded-t-2xl rounded-bl-2xl max-w-[60%] text-[#FFFFFF]">
                   {message.content}
+                  <div className="text-[10px] flex items-end">
+                    {getMessageTime(message.createdAt)}
+                  </div>
                 </div>
               </div>
             ) : (
               <div key={message._id || idx} className="flex">
-                <div className="flex bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-xl max-w-[60%]">
+                <div className="flex gap-4 bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-t-2xl rounded-r-2xl max-w-[60%]">
                   {message.content}
+                  <div className="text-[10px] flex items-end">
+                    {getMessageTime(message.createdAt)}
+                  </div>
                 </div>
               </div>
             );
@@ -240,9 +313,28 @@ const Chat = () => {
           <button className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm">
             <MdOutlineEmojiEmotions />
           </button>
-          <button className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm">
+          <button
+            className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm"
+            onClick={fileInputHandler}
+          >
             <GoPaperclip />
           </button>
+          <form
+            encType="multipart/form-data"
+            ref={formRef}
+            onSubmit={(e) => {
+              fileSubmitHandler(e);
+            }}
+          >
+            <input
+              type="file"
+              ref={inputRef}
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files.length > 0) setfileStatus(true);
+              }}
+            />
+          </form>
         </div>
         <form className="flex flex-1 items-center mx-2" onSubmit={sendMessage}>
           <textarea
@@ -252,7 +344,9 @@ const Chat = () => {
             className="flex-1 w-full max-h-28 min-h-[30px] resize-none outline-none px-3"
             value={content}
             placeholder="Type a message"
-            onChange={(e) => { handleTextarea(e)}}
+            onChange={(e) => {
+              handleTextarea(e);
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 sendMessage(e);
