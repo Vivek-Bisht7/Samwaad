@@ -25,7 +25,7 @@ const Users = () => {
   }
   
   return (
-    <div className="w-[35%] border-r bg-white border-gray-100 overflow-y-auto ">
+    <div className="w-[30%] border-r bg-white border-gray-100 overflow-y-auto ">
       <div className="px-2 py-3 space-y-1">
         <div className="w-full h-[6vh] bg-gray-300 rounded-2xl flex items-center px-3 mb-3">
           <button className="cursor-pointer">

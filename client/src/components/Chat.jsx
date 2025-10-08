@@ -226,7 +226,7 @@ const Chat = () => {
   };
 
   return selectedChat ? (
-    <div className="w-[65%] bg-white px-2 pt-2 flex flex-col">
+    <div className="w-[70%] bg-white px-2 pt-2 flex flex-col">
       {/*header*/}
 
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">

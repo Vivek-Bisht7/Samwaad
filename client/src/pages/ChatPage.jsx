@@ -6,6 +6,7 @@ import Chat from "../components/Chat";
 import socket from "../utils/socket";
 import { useContext } from "react";
 import { UserContext} from "../contexts/UserContext";
+import Navbar2 from "../components/Navbar2";
 
 const ChatPage = () => {
   const [selectedChat, setselectedChat] = useState(null);
@@ -45,7 +46,8 @@ const ChatPage = () => {
     <ChatContext.Provider value={{ selectedChat, setselectedChat }}>
       <div>
         <Navbar />
-        <div className="flex h-[calc(100vh-10vh)] w-[100%] overflow-hidden">
+        <div className="flex h-[calc(100vh-8vh)] w-[100%] overflow-hidden">
+          <Navbar2/>
           <Users />
           <Chat />
         </div>
