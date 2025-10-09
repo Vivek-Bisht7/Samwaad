@@ -179,4 +179,23 @@ const getCurrentUser = (req,res) =>{
   res.send({user});
 }
 
-module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser};
+
+const searchUser = async (req,res) => {
+  let {user} = req.body;
+
+  user = user.trim();
+
+  if(!user){
+    return res.status(400).json({success:false,message:"Enter a valid user credentials"});
+  }  
+  
+  const temp = await User.findOne({$or:[{userName:user},{userEmail:user}]});
+
+  if(!temp) return res.status(404).json({success:false,message:"User not found"});
+
+  if(req.user.id==temp._id) return res.status(404).json({success:false,message:"User logged in"});
+  
+  res.status(200).json({success:true,message:"User found successfully",user:temp});
+}
+
+module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser};

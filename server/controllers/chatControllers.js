@@ -44,6 +44,7 @@ const getAllChat = async (req, res) => {
         .populate("latestMessage" , "content createdAt")
         .sort({ updatedAt: -1 });
 
+    if(!chats) return res.status(404).json({success:false,message:"Chats not found"});
 
     chats = chats.map((chat)=>{
 
@@ -52,7 +53,7 @@ const getAllChat = async (req, res) => {
 
         return{
           ...chat.toObject(),
-          chatName : otherUser.userName,
+          chatName : otherUser?.userName,
           
         }
       }

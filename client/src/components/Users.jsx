@@ -27,7 +27,7 @@ const Users = () => {
   return (
     <div className="w-[30%] border-r bg-white border-gray-100 overflow-y-auto ">
       <div className="px-2 py-3 space-y-1">
-        <div className="w-full h-[6vh] bg-gray-300 rounded-2xl flex items-center px-3 mb-3">
+        <div className="w-full h-[6vh] border border-gray-200 shadow shadow-neutral-200 border-b-[#4CAF93] border-b-2 rounded-sm flex items-center px-3 mb-3">
           <button className="cursor-pointer">
             <IoSearch />
           </button>
@@ -44,7 +44,7 @@ const Users = () => {
         {allChats.map((user, index) => (
           <UserChat
             key={index}
-            chatName={user.chatName}
+            chatName={user?.chatName}
             latestMessage={user.latestMessage?.content}
             onClick={(()=>temp(user))}
           />

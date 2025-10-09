@@ -184,7 +184,7 @@ const Chat = () => {
   const getOtherUser = (selectedChat, currentUser) => {
     if (!selectedChat || !currentUser) return null;
 
-    return selectedChat.users.find((user) => user._id !== currentUser.user);
+    return selectedChat?.users?.find((user) => user._id !== currentUser.user);
   };
 
   const getMessageTime = (time) => {
@@ -239,7 +239,7 @@ const Chat = () => {
 
           <div>
             <div className="font-semibold text-md">
-              {selectedChat?.chatName}
+              {selectedChat?.chatName?selectedChat?.chatName:getOtherUser(selectedChat, currentUser).userName}
             </div>
             <div className="text-sm">
               {onlineUsers.includes(
@@ -365,7 +365,7 @@ const Chat = () => {
       {/*Type message over*/}
     </div>
   ) : (
-    <div className="bg-white w-[65%] flex items-center justify-center">
+    <div className="bg-white w-[70%] flex items-center justify-center">
       <div className="text-center space-y-2 border border-dashed border-[#4CAF93] p-4 rounded-2xl">
         <p>Click on Any Chat</p>
         <p>

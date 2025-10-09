@@ -5,6 +5,7 @@ const path = require("path");
 const sendMessage = async (req, res) => {
   try {
     const { chatId, content } = req.body;
+    
     const sender = req.user.id;
 
     let newMessage = await Message.create({ sender, chatId, content });

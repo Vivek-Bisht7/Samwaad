@@ -218,7 +218,7 @@ const UserAuth = () => {
       <div className="flex justify-center items-center min-h-[90vh]">
         <form
           action=""
-          className="bg-white min-h-[30vh] w-[35%] border border-[#4CAF93] rounded-2xl p-4 shadow-md"
+          className="bg-white min-h-[30vh] w-[35%]  rounded-2xl p-4 shadow-sm shadow-[#4CAF93]"
         >
           <div className="w-full">
             <button
@@ -282,7 +282,7 @@ const UserAuth = () => {
             <div className="w-full">
               <input
                 type="text"
-                placeholder="Enter User Name (Unique & No spaces)"
+                placeholder="Enter User Name"
                 value={userName}
                 onChange={(e) => {
                   setuserName(e.target.value);
