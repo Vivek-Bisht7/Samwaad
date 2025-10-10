@@ -213,7 +213,7 @@ const Chat = () => {
     formData.append("file", file);
 
     try {
-      const res = await axios.post("/message/fileUpload", formData, {
+      const res = await axios.post("/message/uploads", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -232,9 +232,9 @@ const Chat = () => {
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
         <div className="h-full flex items-center gap-2">
           <img
-            src="/Images/userImage.jpg"
+            src={`${getOtherUser(selectedChat, currentUser).userImage}`}
             alt="User Image"
-            className="h-full rounded-full"
+            className="w-12 h-12 object-cover rounded-full"
           />
 
           <div>

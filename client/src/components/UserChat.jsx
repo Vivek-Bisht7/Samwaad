@@ -1,8 +1,12 @@
 import React from "react";
 
-const UserChat = ({ chatName, latestMessage, onClick }) => {
+const UserChat = ({ chatName, latestMessage, imageUrl , onClick }) => {
+
+   console.log(imageUrl);
+
   return (
     <>
+      
       <div
         className="h-[12vh] w-full rounded px-2 hover:bg-gray-100 py-2 flex justify-between items-center"
         onClick={onClick}
@@ -11,9 +15,9 @@ const UserChat = ({ chatName, latestMessage, onClick }) => {
         <div className="flex">
           <div className="h-[7vh] ">
             <img
-              src="/Images/userImage.jpg"
+              src={imageUrl}
               alt="User Image"
-              className="h-full rounded-full"
+              className="h-12 w-12 object-cover rounded-full"
             />
           </div>
 

@@ -7,6 +7,6 @@ const upload = require('../middleware/multerMiddleware');
 
 router.post("/",authenticateUser,sendMessage);
 router.get("/:chatId",authenticateUser,getAllMessages);
-router.post("/fileUpload",authenticateUser,upload.single('file'),uploadFile);
+router.post("/:type",authenticateUser,upload.single('file'),uploadFile);
 
 module.exports = router;

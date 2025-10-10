@@ -198,4 +198,13 @@ const searchUser = async (req,res) => {
   res.status(200).json({success:true,message:"User found successfully",user:temp});
 }
 
-module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser};
+const updateProfile = async (req,res) =>{
+
+  const user = await User.findById(req.user.id);
+
+  user.userImage = `http://localhost:3000/profile/${req.file.filename}`
+  await user.save();
+
+}
+
+module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser,updateProfile};

@@ -3,9 +3,11 @@ import { ChatContext } from "../contexts/ChatContext";
 import { IoSearch } from "react-icons/io5";
 import UserChat from "./UserChat";
 import axios from "../utils/axios";
+import { UserContext } from "../contexts/UserContext";
 
 const Users = () => {
   const [allChats, setallChats] = useState([]);
+  const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
     axios
@@ -23,6 +25,12 @@ const Users = () => {
   const temp = (user)=>{
     setselectedChat(user);
   }
+
+  const getOtherUser = (selectedChat, currentUser) => {
+    if (!selectedChat || !currentUser) return null;
+
+    return selectedChat?.users?.find((user) => user._id !== currentUser.user);
+  };
   
   return (
     <div className="w-[30%] border-r bg-white border-gray-100 overflow-y-auto ">
@@ -46,6 +54,7 @@ const Users = () => {
             key={index}
             chatName={user?.chatName}
             latestMessage={user.latestMessage?.content}
+            imageUrl={getOtherUser(user, currentUser)?.userImage}
             onClick={(()=>temp(user))}
           />
         ))}
