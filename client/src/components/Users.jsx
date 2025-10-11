@@ -1,13 +1,15 @@
-import React, { useEffect, useState ,useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { ChatContext } from "../contexts/ChatContext";
 import { IoSearch } from "react-icons/io5";
 import UserChat from "./UserChat";
 import axios from "../utils/axios";
 import { UserContext } from "../contexts/UserContext";
+import socket from "../utils/socket";
 
 const Users = () => {
   const [allChats, setallChats] = useState([]);
   const { currentUser } = useContext(UserContext);
+  const { selectedChat, setselectedChat } = useContext(ChatContext);
 
   useEffect(() => {
     axios
@@ -20,18 +22,55 @@ const Users = () => {
       });
   }, []);
 
-  const {selectedChat,setselectedChat} = useContext(ChatContext);
-
-  const temp = (user)=>{
+  const temp = (user) => {
     setselectedChat(user);
-  }
+  };
 
   const getOtherUser = (selectedChat, currentUser) => {
     if (!selectedChat || !currentUser) return null;
 
     return selectedChat?.users?.find((user) => user._id !== currentUser.user);
   };
-  
+
+  //for realtime latest message update
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleUpdateLatestMessage = (message) => {
+      setallChats((prevChats) => {
+        return prevChats.map((chat) =>
+          chat._id === message.chatId
+            ? {
+                ...chat,
+                latestMessage: {
+                  content: message.content,
+                  createdAt: message.createdAt,
+                },
+              }
+            : chat
+        );
+      });
+    };
+
+    socket.on("updateLatestMessage", handleUpdateLatestMessage);
+
+    return () => {
+      socket.off("updateLatestMessage", handleUpdateLatestMessage);
+    };
+  }, []);
+
+  const getMessageTime = (messageTime) => {
+    console.log(messageTime);
+
+    const objTime = new Date(messageTime);
+    const istTime = objTime.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    return istTime.toUpperCase();
+  };
+
   return (
     <div className="w-[30%] border-r bg-white border-gray-100 overflow-y-auto ">
       <div className="px-2 py-3 space-y-1">
@@ -55,13 +94,13 @@ const Users = () => {
             chatName={user?.chatName}
             latestMessage={user.latestMessage?.content}
             imageUrl={getOtherUser(user, currentUser)?.userImage}
-            onClick={(()=>temp(user))}
+            messageTime={
+                getMessageTime(user?.latestMessage?.createdAt)
+            }
+            onClick={() => temp(user)}
           />
         ))}
       </div>
-
-
-
     </div>
   );
 };

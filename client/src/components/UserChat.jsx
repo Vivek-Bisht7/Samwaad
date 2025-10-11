@@ -1,9 +1,7 @@
 import React from "react";
 
-const UserChat = ({ chatName, latestMessage, imageUrl , onClick }) => {
-
-   console.log(imageUrl);
-
+const UserChat = ({ chatName, latestMessage, imageUrl , messageTime , onClick }) => {
+  
   return (
     <>
       
@@ -31,7 +29,7 @@ const UserChat = ({ chatName, latestMessage, imageUrl , onClick }) => {
         {/* notification and time */}
         <div className="flex flex-col items-end">
           <div>
-            <div className="text-[12px] text-gray-500">7:45 AM</div>
+            <div className="text-[12px] text-gray-500">{messageTime}</div>
           </div>
           <div>
             <div className="rounded-full bg-[#4CAF93] h-5 w-5 flex items-center justify-center text-white font-semibold text-[12px] mt-1">

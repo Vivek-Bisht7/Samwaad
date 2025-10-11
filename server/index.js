@@ -34,6 +34,7 @@ io.on("connection" , (socket)=>{
 
   socket.on("newMessage",(message)=>{
     socket.to(message.chatId).emit("messageReceived" , message);
+    io.to(message.chatId).emit("updateLatestMessage" , message);
   })
 
   socket.on("leaveChat",(chatId)=>{
