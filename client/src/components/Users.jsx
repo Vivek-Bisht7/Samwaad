@@ -41,7 +41,7 @@ const Users = () => {
         return prevChats.map((chat) =>
           chat._id === message.chatId
             ? {
-                ...chat,
+               ...chat,
                 latestMessage: {
                   content: message.content,
                   createdAt: message.createdAt,
@@ -60,7 +60,6 @@ const Users = () => {
   }, []);
 
   const getMessageTime = (messageTime) => {
-    console.log(messageTime);
 
     const objTime = new Date(messageTime);
     const istTime = objTime.toLocaleString("en-IN", {
