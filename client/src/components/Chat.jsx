@@ -7,6 +7,7 @@ import { ChatContext } from "../contexts/ChatContext";
 import axios from "../utils/axios";
 import socket from "../utils/socket";
 import { UserContext } from "../contexts/UserContext";
+import EmojiPicker from 'emoji-picker-react';
 
 const Chat = () => {
   const typeMessageRef = useRef(null);
@@ -23,6 +24,7 @@ const Chat = () => {
   const inputRef = useRef(null);
   const formRef = useRef(null);
   const [fileStatus, setfileStatus] = useState(false);
+  const [emojiPickerStatus, setemojiPickerStatus] = useState(false);
 
   // Used to fetch current user using backend
   useEffect(() => {
@@ -45,6 +47,7 @@ const Chat = () => {
     typeMessageRef?.current?.focus();
 
     if (selectedChat) {
+      setemojiPickerStatus(false);
       axios
         .get(`/message/${selectedChat?._id}`)
         .then((response) => {
@@ -82,7 +85,7 @@ const Chat = () => {
       });
       }, 500);
     }
-  }, [messages, typingUser]);
+  }, [messages, typingUser , emojiPickerStatus]);
 
   // For Knowing typing status
   useEffect(() => {
@@ -110,6 +113,7 @@ const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    setemojiPickerStatus(false);
 
     if (fileStatus) {
       formRef.current.requestSubmit();
@@ -302,15 +306,17 @@ const Chat = () => {
             );
           })}
         <div>{typingUser && TypingIndicatorVisual()}</div>
+        <div className={emojiPickerStatus?"visible":"hidden"}><EmojiPicker onEmojiClick={(emojiObject)=>{setcontent((prev)=>(prev || "") + emojiObject.emoji)
+        }}/></div>
         <div ref={bottomMessageRef}></div>
       </div>
       {/*messages over*/}
-
+        
       {/*Type message*/}
 
       <div className="flex items-center w-full  px-2 py-1 ">
         <div className="flex items-center h-10 gap-2 text-2xl text-[#212121]">
-          <button className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm">
+          <button className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm" onClick={()=>{typeMessageRef?.current?.focus();  emojiPickerStatus?setemojiPickerStatus(false):setemojiPickerStatus(true)}}> 
             <MdOutlineEmojiEmotions />
           </button>
           <button
