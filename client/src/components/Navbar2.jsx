@@ -45,17 +45,17 @@ const Navbar2 = () => {
     <div className="min-h-screen w-[4vw] bg-[#4CAF93]">
       {/* top icons */}
       <div className="flex flex-col items-center h-[40%] pt-4">
-        <VscThreeBars className="text-3xl text-white cursor-pointer" />
+        <VscThreeBars className="text-2xl text-white cursor-pointer" />
       </div>
 
       {/* bottom icons */}
       <div className="flex flex-col gap-4 items-center justify-end h-[50%]">
         <button>
-          <IoIosSettings className="text-3xl text-white cursor-pointer" />
+          <IoIosSettings className="text-2xl text-white cursor-pointer" />
         </button>
         <form onSubmit={profileInput}>
           <button type="submit">
-            <CgProfile className="text-3xl text-white cursor-pointer" />
+            <CgProfile className="text-2xl text-white cursor-pointer" />
           </button>
         </form>
         <input
@@ -66,7 +66,7 @@ const Navbar2 = () => {
           onChange={updateProfileImage}
         />
         <button onClick={logoutHandler}>
-          <IoLogOut className="text-3xl text-white cursor-pointer" />
+          <IoLogOut className="text-2xl text-white cursor-pointer" />
         </button>
       </div>
     </div>

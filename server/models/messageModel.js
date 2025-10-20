@@ -19,6 +19,10 @@ const messageSchema = new mongoose.Schema({
     imageUrl:{
         type : String,
         default : null,
+    },
+    isRead:{
+        type : Boolean,
+        default : false,
     }
 } ,
     {timestamps:true},

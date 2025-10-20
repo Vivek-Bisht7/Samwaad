@@ -26,18 +26,11 @@ const UserChat = ({ chatName, latestMessage, imageUrl , messageTime , onClick })
         </div>
         {/* photo , name , message over*/}
 
-        {/* notification and time */}
+        {/*time */}
         <div className="flex flex-col items-end">
-          <div>
             <div className="text-[12px] text-gray-500">{messageTime}</div>
-          </div>
-          <div>
-            <div className="rounded-full bg-[#4CAF93] h-5 w-5 flex items-center justify-center text-white font-semibold text-[12px] mt-1">
-              1
-            </div>
-          </div>
         </div>
-        {/* notification and time over*/}
+        {/*time over*/}
       </div>
     </>
   );

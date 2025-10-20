@@ -59,7 +59,7 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-between px-4 text-3xl text-[#FAFAFA] bg-[#4CAF93] min-h-[8vh] shadow-2xl shadow-[#4CAF93]">
-      SAMWAAD
+      <pre className="tracking-wide text-2xl font-sans">  SAMWAAD</pre>
       <div className="flex h-[5vh]">
         {currentUser ? (
           <form
