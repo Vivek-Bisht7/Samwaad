@@ -39,7 +39,7 @@ const CreateGroup = () => {
   }, []);
 
   const getOtherUser = (users, loggedInUser) => {
-    return users.find((u) => u._id?.toString() !== loggedInUser?.toString());
+    return users.find((u) => u._id?.toString()!==loggedInUser?.toString());
   };
 
   useEffect(() => {
