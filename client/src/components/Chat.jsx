@@ -7,7 +7,7 @@ import { ChatContext } from "../contexts/ChatContext";
 import axios from "../utils/axios";
 import socket from "../utils/socket";
 import { UserContext } from "../contexts/UserContext";
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker from "emoji-picker-react";
 
 const Chat = () => {
   const typeMessageRef = useRef(null);
@@ -80,12 +80,12 @@ const Chat = () => {
     if (messages?.length) {
       setTimeout(() => {
         bottomMessageRef.current?.scrollIntoView({
-        behaviour: "smooth",
-        block: "end",
-      });
+          behaviour: "smooth",
+          block: "end",
+        });
       }, 500);
     }
-  }, [messages, typingUser , emojiPickerStatus]);
+  }, [messages, typingUser, emojiPickerStatus]);
 
   // For Knowing typing status
   useEffect(() => {
@@ -221,8 +221,8 @@ const Chat = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      socket.emit("newMessage", res.data.newMessage,);
-      setmessages((prev) => [...prev, res.data.newMessage,]);
+      socket.emit("newMessage", res.data.newMessage);
+      setmessages((prev) => [...prev, res.data.newMessage]);
       setfileStatus(false);
     } catch (err) {
       console.error("Error" + err.message);
@@ -235,23 +235,37 @@ const Chat = () => {
 
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
         <div className="h-full flex items-center gap-2">
-          <img
-            src={`${getOtherUser(selectedChat, currentUser).userImage}`}
-            alt="User Image"
-            className="w-12 h-12 object-cover rounded-full"
-          />
+          {selectedChat?.isGroupChat ? (
+            <img
+              src={`${selectedChat.groupImage}`}
+              alt="User Image"
+              className="w-12 h-12 object-cover rounded-full"
+            />
+          ) : (
+            <img
+              src={`${getOtherUser(selectedChat, currentUser).userImage}`}
+              alt="User Image"
+              className="w-12 h-12 object-cover rounded-full"
+            />
+          )}
 
           <div>
             <div className="font-semibold text-md">
-              {selectedChat?.chatName?selectedChat?.chatName:getOtherUser(selectedChat, currentUser).userName}
+              {selectedChat?.chatName
+                ? selectedChat?.chatName
+                : getOtherUser(selectedChat, currentUser).userName}
             </div>
-            <div className="text-sm">
-              {onlineUsers.includes(
-                getOtherUser(selectedChat, currentUser)?._id
-              )
-                ? "Online"
-                : "Offline"}
-            </div>
+            {!selectedChat.isGroupChat ? (
+              <div className="text-sm">
+                {onlineUsers.includes(
+                  getOtherUser(selectedChat, currentUser)?._id
+                )
+                  ? "Online"
+                  : "Offline"}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <form action="" className="text-2xl flex items-center cursor-pointer">
@@ -306,17 +320,30 @@ const Chat = () => {
             );
           })}
         <div>{typingUser && TypingIndicatorVisual()}</div>
-        <div className={emojiPickerStatus?"visible":"hidden"}><EmojiPicker onEmojiClick={(emojiObject)=>{setcontent((prev)=>(prev || "") + emojiObject.emoji)
-        }}/></div>
+        <div className={emojiPickerStatus ? "visible" : "hidden"}>
+          <EmojiPicker
+            onEmojiClick={(emojiObject) => {
+              setcontent((prev) => (prev || "") + emojiObject.emoji);
+            }}
+          />
+        </div>
         <div ref={bottomMessageRef}></div>
       </div>
       {/*messages over*/}
-        
+
       {/*Type message*/}
 
       <div className="flex items-center w-full  px-2 py-1 ">
         <div className="flex items-center h-10 gap-2 text-2xl text-[#212121]">
-          <button className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm" onClick={()=>{typeMessageRef?.current?.focus();  emojiPickerStatus?setemojiPickerStatus(false):setemojiPickerStatus(true)}}> 
+          <button
+            className="cursor-pointer h-full w-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-sm"
+            onClick={() => {
+              typeMessageRef?.current?.focus();
+              emojiPickerStatus
+                ? setemojiPickerStatus(false)
+                : setemojiPickerStatus(true);
+            }}
+          >
             <MdOutlineEmojiEmotions />
           </button>
           <button

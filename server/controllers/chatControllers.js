@@ -38,11 +38,15 @@ const getOtherUser = (users , loggedInUser) => {
 const getAllChat = async (req, res) => {
   try {
     const currentUser = req.user.id;
-
+    console.log(currentUser);
+    
     let chats = await Chat.find({ users: currentUser })
         .populate("users" , "userName userImage")
         .populate("latestMessage" , "content createdAt")
         .sort({ updatedAt: -1 });
+
+      console.log(chats);
+      
 
     if(!chats) return res.status(404).json({success:false,message:"Chats not found"});
 
@@ -70,4 +74,31 @@ const getAllChat = async (req, res) => {
   }
 };
 
-module.exports = { createChat, getAllChat };
+const createGroupChat = async (req,res) => {
+    
+    // if(!req.body.GroupName){
+    //   return res.status()
+    // }
+    // if(!JSON.parse(req.body.SelectedUsers)){
+    //   return res.status()
+    // }
+    // if(!req.file.filename){
+    //   return res.status()
+    // }
+  const arr = JSON.parse(req.body.SelectedUsers);
+  arr.push(req.user.id);
+      
+    
+    const group = await Chat.create({
+      chatName:req.body.GroupName,
+      users:arr,
+      isGroupChat:true,
+      groupAdmin:req.user.id,
+      groupImage:`http://localhost:3000/group/${req.file.filename}`
+    })
+
+    res.send(group);
+
+}
+
+module.exports = { createChat, getAllChat , createGroupChat};

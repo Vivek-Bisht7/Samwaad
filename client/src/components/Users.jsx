@@ -92,9 +92,9 @@ const Users = () => {
             key={index}
             chatName={user?.chatName}
             latestMessage={user.latestMessage?.content}
-            imageUrl={getOtherUser(user, currentUser)?.userImage}
+            imageUrl={user.isGroupChat?user.groupImage:getOtherUser(user, currentUser)?.userImage}
             messageTime={
-                getMessageTime(user?.latestMessage?.createdAt)
+                getMessageTime(user?.latestMessage?.createdAt)==="INVALID DATE"?"NEW CHAT":getMessageTime(user?.latestMessage?.createdAt)
             }
             onClick={() => temp(user)}
           />
