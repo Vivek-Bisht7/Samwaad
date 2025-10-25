@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Navbar2 from "../components/Navbar2";
 import axios from "../utils/axios";
@@ -17,6 +18,7 @@ const CreateGroup = () => {
   const inputRef = useRef();
   const [profileStatus, setProfileStatus] = useState(false);
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -39,22 +41,24 @@ const CreateGroup = () => {
   }, []);
 
   const getOtherUser = (users, loggedInUser) => {
-    return users.find((u) => u._id?.toString()!==loggedInUser?.toString());
+    return users.find((u) => u._id?.toString() !== loggedInUser?.toString());
   };
 
   useEffect(() => {
-    if (allChats.length > 0) {
-      setoptionsArr(
-        allChats.map((chat) => {
-          const otherUser = getOtherUser(chat.users, currentUser);
-          return {
-            value: otherUser,
-            label: chat.chatName,
-          };
-        })
-      );
-    }
-  }, [allChats]);
+  if (allChats.length > 0) {
+    const options = allChats
+      .filter((chat) => !chat.isGroupChat)
+      .map((chat) => {
+        const otherUser = getOtherUser(chat.users, currentUser);
+        return {
+          value: otherUser,
+          label: chat.chatName || otherUser.name,
+        };
+      });
+
+    setoptionsArr(options);
+  }
+}, [allChats, currentUser]);
 
   const groupImage = (e) => {
     e.preventDefault();
@@ -70,12 +74,15 @@ const CreateGroup = () => {
 
     if (!groupName.trim()) {
       toast.error("Please enter group name", { position: "top-center" });
+      return;
     } else if (selectedOption.length == 0) {
       toast.error("Please select users to add", { position: "top-center" });
+      return;
     } else if (inputRef.current.files.length == 0) {
       toast.error("Please select a group profile image ", {
         position: "top-center",
       });
+      return;
     }
 
     const formData = new FormData();
@@ -94,10 +101,22 @@ const CreateGroup = () => {
         },
       })
       .then(function (response) {
-        console.log(response);
+        if (response.status === 201) {
+          toast.success("Group created successfully", {
+            position: "top-center",
+          });
+        } else if (response.status === 200) {
+          toast.info("Group already exists", { position: "top-center" });
+        }
+        setTimeout(() => {
+          navigate("/");
+        }, 1200);
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response.status === 400) {
+          toast.error(error.response.data.message, { position: "top-center" });
+        }
+        console.log(error.message);
       });
   };
 

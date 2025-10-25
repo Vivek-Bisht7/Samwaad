@@ -62,7 +62,7 @@ const Chat = () => {
   // For realtime messaging
   useEffect(() => {
     const handleMessage = (message) => {
-      if (message.chatId === selectedChat?._id) {
+      if (message.chatId._id === selectedChat?._id) {
         setmessages((prev) => [...prev, message]);
       }
     };
@@ -123,21 +123,14 @@ const Chat = () => {
 
     if (!fileStatus && !content?.trim()) return;
 
-    const message = {
-      chatId: selectedChat._id,
-      sender: currentUser.user,
-      content,
-      createdAt: new Date(),
-    };
-
     try {
       const res = await axios.post("/message", {
         chatId: selectedChat._id,
         content,
       });
 
-      socket.emit("newMessage", message);
-      setmessages((prev) => [...prev, message]);
+      socket.emit("newMessage", res.data.newMessage);
+      setmessages((prev) => [...prev, res.data.newMessage]);
       socket.emit("stopTyping", {
         chatId: selectedChat._id,
         user: currentUser,
@@ -281,20 +274,40 @@ const Chat = () => {
       <div className="flex-1  overflow-y-auto px-2 py-3 space-y-3">
         {messages &&
           messages.map((message, idx) => {
-            const isCurrentUser = currentUser?.user === message.sender;
+            const isCurrentUser =
+              currentUser?.user === (message.sender?._id || message.sender);
 
             if (message.imageUrl) {
-              return (
-                <div
-                  key={message._id || idx}
-                  className={`flex ${
-                    isCurrentUser ? "justify-end" : "justify-start"
-                  }`}
-                >
+              return isCurrentUser ? (
+                <div key={message._id || idx} className={"flex justify-end"}>
                   <img
                     src={message.imageUrl}
                     className="max-w-[60%] rounded-2xl"
                   />
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  {message.chatId.isGroupChat && (
+                    <div className="h-8 max-w-[60%] flex gap-1 items-center mb-2">
+                      <img
+                        src={message.sender.userImage}
+                        className="h-8 w-8 rounded-full object-cover"
+                        alt="UserImage"
+                      />
+                      <div className="text-md font-semibold text-gray-700">
+                        {message.sender.userName}
+                      </div>
+                    </div>
+                  )}
+                  <div
+                    key={message._id || idx}
+                    className={"flex justify-start"}
+                  >
+                    <img
+                      src={message.imageUrl}
+                      className="max-w-[60%] rounded-2xl"
+                    />
+                  </div>
                 </div>
               );
             }
@@ -309,7 +322,19 @@ const Chat = () => {
                 </div>
               </div>
             ) : (
-              <div key={message._id || idx} className="flex">
+              <div key={message._id || idx} className="flex flex-col space-x-1">
+                {message.chatId.isGroupChat && (
+                  <div className="h-8 max-w-[60%] flex  gap-1 items-center mb-2">
+                    <img
+                      src={message.sender.userImage}
+                      className="h-8 w-8 rounded-full object-cover"
+                      alt="UserImage"
+                    />
+                    <div className="text-sm font-semibold text-gray-700">
+                      {message.sender.userName}
+                    </div>
+                  </div>
+                )}
                 <div className="flex gap-4 bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-t-2xl rounded-r-2xl max-w-[60%]">
                   {message.content}
                   <div className="text-[10px] flex items-end">
