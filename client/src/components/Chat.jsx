@@ -168,7 +168,7 @@ const Chat = () => {
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-300"></span>
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-600"></span>
     </div>
-  );
+  ); 
 
   const handleTextarea = (e) => {
     setcontent(e.target.value);
@@ -232,7 +232,7 @@ const Chat = () => {
             <img
               src={`${selectedChat.groupImage}`}
               alt="User Image"
-              className="w-12 h-12 object-cover rounded-full"
+              className="w-12 h-12 object-cover rounded-full p-1"
             />
           ) : (
             <img
@@ -319,12 +319,12 @@ const Chat = () => {
                   <div className="text-[10px] flex items-end">
                     {getMessageTime(message.createdAt)}
                   </div>
-                </div>
+                </div> 
               </div>
             ) : (
-              <div key={message._id || idx} className="flex flex-col space-x-1">
+              <div key={message._id || idx} className="flex flex-col space-x-1 max-w-[60%]">
                 {message.chatId.isGroupChat && (
-                  <div className="h-8 max-w-[60%] flex  gap-1 items-center mb-2">
+                  <div className="h-8 flex  gap-1 items-center mb-2">
                     <img
                       src={message.sender.userImage}
                       className="h-8 w-8 rounded-full object-cover"
@@ -335,7 +335,7 @@ const Chat = () => {
                     </div>
                   </div>
                 )}
-                <div className="flex gap-4 bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-t-2xl rounded-r-2xl max-w-[60%]">
+                <div className="flex gap-4 bg-[#F1F1F1] text-[#212121] px-3 py-2 rounded-t-2xl rounded-r-2xl w-fit">
                   {message.content}
                   <div className="text-[10px] flex items-end">
                     {getMessageTime(message.createdAt)}

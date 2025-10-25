@@ -37,9 +37,10 @@ const Users = () => {
     if (!socket) return;
 
     const handleUpdateLatestMessage = (message) => {
+      
       setallChats((prevChats) => {
         return prevChats.map((chat) =>
-          chat._id === message.chatId
+          chat._id === message.chatId._id
             ? {
                ...chat,
                 latestMessage: {
@@ -50,6 +51,7 @@ const Users = () => {
             : chat
         );
       });
+      
     };
 
     socket.on("updateLatestMessage", handleUpdateLatestMessage);
