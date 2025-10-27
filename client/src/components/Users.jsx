@@ -4,10 +4,11 @@ import { IoSearch } from "react-icons/io5";
 import UserChat from "./UserChat";
 import axios from "../utils/axios";
 import { UserContext } from "../contexts/UserContext";
+import { AllChatContext } from "../contexts/AllChatContext";
 import socket from "../utils/socket";
 
 const Users = () => {
-  const [allChats, setallChats] = useState([]);
+  const {allChats, setallChats} = useContext(AllChatContext);
   const { currentUser } = useContext(UserContext);
   const { selectedChat, setselectedChat } = useContext(ChatContext);
 
@@ -21,6 +22,17 @@ const Users = () => {
         console.error("Error : " + error.message);
       });
   }, []);
+
+  useEffect(() => {
+    socket.on("updateChat",(chat)=>{
+      if(!allChats.some(c => c._id === chat._id)) setallChats((prev)=>[...prev,chat]);
+    })
+  
+    return () => {
+      socket.off("updateChat");
+    }
+  }, []);
+  
 
   const temp = (user) => {
     setselectedChat(user);
@@ -89,10 +101,10 @@ const Users = () => {
           </form>
         </div>
 
-        {allChats.map((user, index) => (
+        {allChats?.map((user, index) => (
           <UserChat
             key={index}
-            chatName={user?.chatName}
+            chatName={user?.chatName || getOtherUser(user,currentUser)?.userName}
             latestMessage={user.latestMessage?.content}
             imageUrl={user.isGroupChat?user.groupImage:getOtherUser(user, currentUser)?.userImage}
             messageTime={

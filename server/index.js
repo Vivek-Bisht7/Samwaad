@@ -53,6 +53,14 @@ io.on("connection" , (socket)=>{
   socket.on("UserOnline",(UserId)=>{
     OnlineUsers.set(socket.id,UserId);
     io.emit("UpdateUserOnlineStatus",Array.from(OnlineUsers.values()));
+  });
+
+  socket.on("newChat",(chat,receiverId)=>{
+    for(const [socketId , userId] of OnlineUsers){
+      if(userId === receiverId){
+        socket.to(socketId).emit("updateChat",chat);
+      }
+    }
   })
 
   socket.on("disconnect" , ()=>{

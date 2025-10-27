@@ -1,14 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { IoSearch } from "react-icons/io5";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import { ChatContext } from "../contexts/ChatContext";
 import { UserContext } from "../contexts/UserContext";
+import { AllChatContext } from "../contexts/AllChatContext";
+import socket from "../utils/socket";
 
 const Navbar = () => {
   const [user, setuser] = useState("");
   const { currentUser } = useContext(UserContext);
-
+  const {allChats,setallChats} = useContext(AllChatContext); 
   const chatContext = useContext(ChatContext);
   const setselectedChat = chatContext?.setselectedChat;
 
@@ -22,14 +24,15 @@ const Navbar = () => {
         user,
       })
       .then(function (response) {
-        console.log(response.data.user);
-
         axios
           .post("/chat", {
             receiverId: response.data.user._id,
           })
           .then(function (res) {
-            if (setselectedChat) setselectedChat(res.data.chat);
+              setselectedChat(res.data.chat);
+              if(!allChats.some(c => c._id === res.data.chat._id)){ setallChats((prev)=>[...prev,res.data.chat]);
+              socket.emit("newChat",res.data.chat,response.data.user._id);
+              }
           })
           .catch(function (err) {
             console.log(err);
@@ -56,7 +59,7 @@ const Navbar = () => {
 
     setuser("");
   };
-
+  
   return (
     <nav className="flex items-center justify-between px-4 text-3xl text-[#FAFAFA] bg-[#4CAF93] min-h-[8vh] shadow-2xl shadow-[#4CAF93]">
       <pre className="tracking-wide text-2xl font-sans">  SAMWAAD</pre>

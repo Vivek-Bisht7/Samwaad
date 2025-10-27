@@ -8,11 +8,13 @@ import { ImCross } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext } from "react"; 
+import { AllChatContext } from "../contexts/AllChatContext";
 
 const CreateGroup = () => {
-  const [allChats, setallChats] = useState([]);
+ 
   const [selectedOption, setselectedOption] = useState([]);
+  const {allChats,setallChats} = useContext(AllChatContext);
   const [groupName, setgroupName] = useState("");
   const [optionsArr, setoptionsArr] = useState([]);
   const inputRef = useRef();
@@ -21,15 +23,6 @@ const CreateGroup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("/chat")
-      .then((res) => {
-        setallChats(res.data.chats);
-      })
-      .catch((error) => {
-        console.error("Error : " + error.message);
-      });
-
     axios
       .get("/user/currentUser")
       .then((res) => {

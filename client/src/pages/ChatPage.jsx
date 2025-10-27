@@ -12,7 +12,6 @@ const ChatPage = () => {
   const [selectedChat, setselectedChat] = useState(null);
   const {currentUser} = useContext(UserContext);
 
-  
   useEffect(() => {
   if (!currentUser) return;
 
