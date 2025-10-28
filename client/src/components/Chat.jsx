@@ -8,6 +8,7 @@ import axios from "../utils/axios";
 import socket from "../utils/socket";
 import { UserContext } from "../contexts/UserContext";
 import EmojiPicker from "emoji-picker-react";
+import { Link } from "react-router-dom";
 
 const Chat = () => {
   const typeMessageRef = useRef(null);
@@ -168,7 +169,7 @@ const Chat = () => {
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-300"></span>
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-600"></span>
     </div>
-  ); 
+  );
 
   const handleTextarea = (e) => {
     setcontent(e.target.value);
@@ -229,27 +230,34 @@ const Chat = () => {
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
         <div className="h-full flex items-center gap-2">
           {selectedChat?.isGroupChat ? (
-            <img
-              src={`${selectedChat.groupImage}`}
-              alt="User Image"
-              className="w-12 h-12 object-cover rounded-full p-1"
-            />
+            <Link to={"/view"} state={{ URL: selectedChat.groupImage }}>
+              <img
+                src={`${selectedChat.groupImage}`}
+                alt="User Image"
+                className="w-12 h-12 object-cover rounded-full p-1"
+              />
+            </Link>
           ) : (
-            <img
-              src={`${getOtherUser(selectedChat, currentUser).userImage}`}
-              alt="User Image"
-              className="w-12 h-12 object-cover rounded-full"
-            />
+            <Link
+              to={"/view"}
+              state={{ URL: getOtherUser(selectedChat, currentUser).userImage }}
+            >
+              <img
+                src={`${getOtherUser(selectedChat, currentUser).userImage}`}
+                alt="User Image"
+                className="w-12 h-12 object-cover rounded-full"
+              />
+            </Link>
           )}
 
           <div>
-            <div className="font-semibold text-md">
+            <div className="font-semibold text-md text-gray-800">
               {selectedChat?.chatName
                 ? selectedChat?.chatName
                 : getOtherUser(selectedChat, currentUser).userName}
             </div>
             {!selectedChat.isGroupChat ? (
-              <div className="text-sm">
+              <div className="text-sm text-gray-700">
                 {onlineUsers.includes(
                   getOtherUser(selectedChat, currentUser)?._id
                 )
@@ -257,7 +265,15 @@ const Chat = () => {
                   : "Offline"}
               </div>
             ) : (
-              ""
+              <>
+                <Link
+                  to="/groupDetails"
+                  className="text-sm text-gray-700 cursor-pointer"
+                  state={{ group: selectedChat }}
+                >
+                  View Details
+                </Link>
+              </>
             )}
           </div>
         </div>
@@ -279,21 +295,32 @@ const Chat = () => {
 
             if (message.imageUrl) {
               return isCurrentUser ? (
-                <div key={message._id || idx} className={"flex justify-end"}>
-                  <img
-                    src={message.imageUrl}
-                    className="max-w-[60%] rounded-2xl"
-                  />
+                <div key={message._id || idx}>
+                  <Link
+                    to={"/view"}
+                    state={{ URL: message.imageUrl }}
+                    className={"flex justify-end"}
+                  >
+                    <img
+                      src={message.imageUrl}
+                      className="max-w-[60%] rounded-2xl"
+                    />
+                  </Link>
                 </div>
               ) : (
                 <div className="flex flex-col">
                   {message.chatId.isGroupChat && (
                     <div className="h-8 max-w-[60%] flex gap-1 items-center mb-2">
-                      <img
-                        src={message.sender.userImage}
-                        className="h-8 w-8 rounded-full object-cover"
-                        alt="UserImage"
-                      />
+                      <Link
+                        to="/view"
+                        state={{ URL: message.sender.userImage }}
+                      >
+                        <img
+                          src={message.sender.userImage}
+                          className="h-8 w-8 rounded-full object-cover"
+                          alt="UserImage"
+                        />
+                      </Link>
                       <div className="text-md font-semibold text-gray-700">
                         {message.sender.userName}
                       </div>
@@ -303,10 +330,12 @@ const Chat = () => {
                     key={message._id || idx}
                     className={"flex justify-start"}
                   >
-                    <img
+                   <Link to={"/view"} state={{URL:message.imageUrl}}>
+                     <img
                       src={message.imageUrl}
                       className="max-w-[60%] rounded-2xl"
                     />
+                   </Link>
                   </div>
                 </div>
               );
@@ -319,17 +348,22 @@ const Chat = () => {
                   <div className="text-[10px] flex items-end">
                     {getMessageTime(message.createdAt)}
                   </div>
-                </div> 
+                </div>
               </div>
             ) : (
-              <div key={message._id || idx} className="flex flex-col space-x-1 max-w-[60%]">
+              <div
+                key={message._id || idx}
+                className="flex flex-col space-x-1 max-w-[60%]"
+              >
                 {message.chatId.isGroupChat && (
                   <div className="h-8 flex  gap-1 items-center mb-2">
-                    <img
+                    <Link to={"/view"} state={{URL:message.sender.userImage}}>
+                      <img
                       src={message.sender.userImage}
                       className="h-8 w-8 rounded-full object-cover"
                       alt="UserImage"
                     />
+                    </Link>
                     <div className="text-sm font-semibold text-gray-700">
                       {message.sender.userName}
                     </div>

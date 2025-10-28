@@ -207,4 +207,21 @@ const updateProfile = async (req,res) =>{
 
 }
 
-module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser,updateProfile};
+const getUserDetails = async (req,res) =>{
+  const {userId} = req.params;
+
+  if(!userId){
+    return res.status(400).json({succes:false,message:"User Id is required"});
+  }
+
+  const user = await User.findById(userId);
+
+
+  if(!user){
+    return res.status(404).json({succes:false,message:"User not found"});
+  }
+
+  return res.status(200).json({success:true,message:"User found",user});
+}
+
+module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser,updateProfile,getUserDetails};
