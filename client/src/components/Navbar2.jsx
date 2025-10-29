@@ -56,18 +56,9 @@ const Navbar2 = () => {
         <button>
           <IoIosSettings className="text-2xl text-white cursor-pointer" />
         </button>
-        <form onSubmit={profileInput}>
-          <button type="submit">
-            <CgProfile className="text-2xl text-white cursor-pointer" />
-          </button>
-        </form>
-        <input
-          type="file"
-          encType="multipart/form-data"
-          hidden
-          ref={inputRef}
-          onChange={updateProfileImage}
-        />
+        <Link to={"/profile"}>
+           <CgProfile className="text-2xl text-white cursor-pointer" />
+        </Link>
         <button onClick={logoutHandler}>
           <IoLogOut className="text-2xl text-white cursor-pointer" />
         </button>

@@ -7,6 +7,7 @@ import { UserContext } from "./contexts/UserContext";
 import { AllChatContext } from "./contexts/AllChatContext";
 import GroupDetails from "./pages/GroupDetails";
 import ViewImage from "./pages/ViewImage";
+import UserProfile from "./pages/UserProfle";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/createGroup" element={<CreateGroup />} />
           <Route path="/groupDetails" element={<GroupDetails/>}/>
           <Route path="/view" element={<ViewImage/>}/>
+          <Route path="/profile" element={<UserProfile/>}/>
         </Routes>
       </UserContext.Provider>
     </AllChatContext.Provider>

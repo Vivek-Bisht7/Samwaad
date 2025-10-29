@@ -14,8 +14,7 @@ const Chat = () => {
   const typeMessageRef = useRef(null);
   const bottomMessageRef = useRef(null);
   const { selectedChat } = useContext(ChatContext);
-  const { setCurrentUser } = useContext(UserContext);
-  const [currentUser, setcurrentUser] = useState(null);
+  const {currentUser ,  setCurrentUser } = useContext(UserContext);
   const [messages, setmessages] = useState();
   const [content, setcontent] = useState();
   const [isTyping, setIsTyping] = useState(false);
@@ -32,16 +31,12 @@ const Chat = () => {
     axios
       .get("/user/currentUser")
       .then((response) => {
-        setcurrentUser(response.data);
+        setCurrentUser(response.data);
       })
       .catch((err) => {
         console.error("Error fetching Current User:", err);
       });
   }, []);
-
-  useEffect(() => {
-    setCurrentUser(currentUser);
-  }, [currentUser]);
 
   // For getting all messages on every chat click
   useEffect(() => {

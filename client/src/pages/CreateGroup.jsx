@@ -22,16 +22,17 @@ const CreateGroup = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("/user/currentUser")
-      .then((res) => {
-        setCurrentUser(res.data.user);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("/user/currentUser")
+  //     .then((res) => {
+  //       setCurrentUser(res.data.user);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  // }, []);
+  
 
   const getOtherUser = (users, loggedInUser) => {
     return users.find((u) => u._id?.toString() !== loggedInUser?.toString());

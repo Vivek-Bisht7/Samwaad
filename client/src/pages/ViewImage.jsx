@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const ViewImage = () => {
   const location = useLocation();
   const { URL } = location.state || "";
-console.log(URL);
+
 
   return (
     <div>
