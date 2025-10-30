@@ -105,8 +105,7 @@ const loginUser = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
-    return res.status(200).json({ success: true, message: "OK" ,});
-
+    return res.status(200).json({ success: true, message: "OK" });
   } catch (err) {
     console.log("Error : " + err.message);
     return res
@@ -150,78 +149,101 @@ const handleRefreshToken = (req, res) => {
   });
 };
 
-const handleLogout = (req,res) =>{
-  try{
-     res.cookie("accessToken", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "development",
-    sameSite: "Strict",
-    expires: new Date(0), 
-  });
+const handleLogout = (req, res) => {
+  try {
+    res.cookie("accessToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "development",
+      sameSite: "Strict",
+      expires: new Date(0),
+    });
 
-  res.cookie("refreshToken", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "development",
-    sameSite: "Strict",
-    expires: new Date(0),
-  })
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "development",
+      sameSite: "Strict",
+      expires: new Date(0),
+    });
 
-  return res.status(200).json("Logout successfull");
-  }
-  catch(err){
+    return res.status(200).json("Logout successfull");
+  } catch (err) {
     console.error("Error : " + err.message);
-    return res.status(500).json({success:false,message:"Error : " + err.message});
+    return res
+      .status(500)
+      .json({ success: false, message: "Error : " + err.message });
   }
-}
+};
 
-const getCurrentUser = (req,res) =>{
+const getCurrentUser = (req, res) => {
   const user = req.user.id;
-  res.send({user});
-}
+  res.send({ user });
+};
 
-
-const searchUser = async (req,res) => {
-  let {user} = req.body;
+const searchUser = async (req, res) => {
+  let { user } = req.body;
 
   user = user.trim();
 
-  if(!user){
-    return res.status(400).json({success:false,message:"Enter a valid user credentials"});
-  }  
-  
-  const temp = await User.findOne({$or:[{userName:user},{userEmail:user}]});
+  if (!user) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Enter a valid user credentials" });
+  }
 
-  if(!temp) return res.status(404).json({success:false,message:"User not found"});
+  const temp = await User.findOne({
+    $or: [{ userName: user }, { userEmail: user }],
+  });
 
-  if(req.user.id==temp._id) return res.status(404).json({success:false,message:"User logged in"});
-  
-  res.status(200).json({success:true,message:"User found successfully",user:temp});
-}
+  if (!temp)
+    return res.status(404).json({ success: false, message: "User not found" });
 
-const updateProfile = async (req,res) =>{
+  if (req.user.id == temp._id)
+    return res.status(404).json({ success: false, message: "User logged in" });
 
+  res
+    .status(200)
+    .json({ success: true, message: "User found successfully", user: temp });
+};
+
+const updateProfile = async (req, res) => {
   const user = await User.findById(req.user.id);
 
-  user.userImage = `http://localhost:3000/profile/${req.file.filename}`
-  await user.save();
+  if (!req.file) {
+    user.userImage = "https://avatar.iran.liara.run/public";
+    await user.save();
+  } else {
+    user.userImage = `http://localhost:3000/profile/${req.file.filename}`;
+    await user.save();
+  }
 
-}
+  res.status(201).json({ success: true });
+};
 
-const getUserDetails = async (req,res) =>{
-  const {userId} = req.params;
+const getUserDetails = async (req, res) => {
+  const { userId } = req.params;
 
-  if(!userId){
-    return res.status(400).json({succes:false,message:"User Id is required"});
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ succes: false, message: "User Id is required" });
   }
 
   const user = await User.findById(userId);
 
-
-  if(!user){
-    return res.status(404).json({succes:false,message:"User not found"});
+  if (!user) {
+    return res.status(404).json({ succes: false, message: "User not found" });
   }
 
-  return res.status(200).json({success:true,message:"User found",user});
-}
+  return res.status(200).json({ success: true, message: "User found", user });
+};
 
-module.exports = { registerUser, loginUser, handleRefreshToken, handleLogout,getCurrentUser,searchUser,updateProfile,getUserDetails};
+module.exports = {
+  registerUser,
+  loginUser,
+  handleRefreshToken,
+  handleLogout,
+  getCurrentUser,
+  searchUser,
+  updateProfile,
+  getUserDetails,
+};

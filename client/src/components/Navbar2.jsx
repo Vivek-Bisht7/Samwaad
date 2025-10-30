@@ -8,7 +8,7 @@ import axios from "../utils/axios";
 import { Link } from "react-router-dom";
 
 const Navbar2 = () => {
-  const inputRef = useRef();
+
 
   const logoutHandler = () => {
     axios
@@ -22,27 +22,6 @@ const Navbar2 = () => {
       });
   };
 
-  const profileInput = async (e) => {
-    e.preventDefault();
-    inputRef.current.click();
-  };
-
-  const updateProfileImage = async () => {
-    if(inputRef.current.files.length <1) return;
-
-    const formdata = new FormData();
-    formdata.append("file", inputRef.current.files[0]);
-
-    try {
-      const res = await axios.post("/user/profile", formdata, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    
-  };
-
   return (
     <div className="min-h-screen w-[3vw] bg-[#4CAF93]">
       {/* top icons */}
@@ -53,9 +32,11 @@ const Navbar2 = () => {
 
       {/* bottom icons */}
       <div className="flex flex-col gap-4 items-center justify-end h-[50%]">
-        <button>
+        <Link to={"/settings"}>
+          <button>
           <IoIosSettings className="text-2xl text-white cursor-pointer" />
         </button>
+        </Link>
         <Link to={"/profile"}>
            <CgProfile className="text-2xl text-white cursor-pointer" />
         </Link>

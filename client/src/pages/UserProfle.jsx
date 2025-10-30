@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Navbar2 from "../components/Navbar2";
-import { useLocation } from "react-router-dom";
 import { ImCross } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
