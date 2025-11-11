@@ -7,6 +7,8 @@ import { UserContext } from "../contexts/UserContext";
 import { AllChatContext } from "../contexts/AllChatContext";
 import socket from "../utils/socket";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar"
+import Navbar2 from "../components/Navbar2"
 
 const Users = () => {
   const {allChats, setallChats} = useContext(AllChatContext);
@@ -90,7 +92,12 @@ const Users = () => {
   };
 
   return (
-    <div className={` ${isMobile?"w-[100%]":"w-[30%]"} border-r bg-white border-gray-100 overflow-y-auto h-[88vh] `}>
+    <div className={`${isMobile?"w-[100%]":"w-[30%]"}`}>
+      {isMobile && <Navbar/>}
+      <div className="flex ">
+        {isMobile && <Navbar2/>}
+
+        <div className={` ${isMobile?"w-[95vw]":"w-[100%]"} border-r bg-white border-gray-100 overflow-y-auto h-[88vh] `}>
       <div className="px-2 py-3 space-y-1">
         <div className="w-full h-[6vh] border border-gray-200 shadow shadow-neutral-200 border-b-[#4CAF93] border-b-2 rounded-sm flex items-center px-3 mb-3">
           <button className="cursor-pointer">
@@ -119,6 +126,9 @@ const Users = () => {
           />
         ))}
       </div>
+    </div>
+      </div>
+      
     </div>
   );
 };
