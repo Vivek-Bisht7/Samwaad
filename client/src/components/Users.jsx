@@ -6,11 +6,15 @@ import axios from "../utils/axios";
 import { UserContext } from "../contexts/UserContext";
 import { AllChatContext } from "../contexts/AllChatContext";
 import socket from "../utils/socket";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const {allChats, setallChats} = useContext(AllChatContext);
   const { currentUser } = useContext(UserContext);
   const { selectedChat, setselectedChat } = useContext(ChatContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -36,6 +40,7 @@ const Users = () => {
 
   const temp = (user) => {
     setselectedChat(user);
+    if(isMobile) navigate("/");
   };
 
   const getOtherUser = (selectedChat, currentUser) => {
@@ -85,7 +90,7 @@ const Users = () => {
   };
 
   return (
-    <div className="w-[30%] border-r bg-white border-gray-100 overflow-y-auto ">
+    <div className={` ${isMobile?"w-[100%]":"w-[30%]"} border-r bg-white border-gray-100 overflow-y-auto h-[88vh] `}>
       <div className="px-2 py-3 space-y-1">
         <div className="w-full h-[6vh] border border-gray-200 shadow shadow-neutral-200 border-b-[#4CAF93] border-b-2 rounded-sm flex items-center px-3 mb-3">
           <button className="cursor-pointer">

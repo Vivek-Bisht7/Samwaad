@@ -25,6 +25,7 @@ const Chat = () => {
   const formRef = useRef(null);
   const [fileStatus, setfileStatus] = useState(false);
   const [emojiPickerStatus, setemojiPickerStatus] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Used to fetch current user using backend
   useEffect(() => {
@@ -219,7 +220,7 @@ const Chat = () => {
   };
 
   return selectedChat ? (
-    <div className="w-[70%] bg-white px-2 pt-2 flex flex-col">
+    <div className={`${isMobile?"w-[100%]":"w-[70%]"} h-[88vh] bg-white px-2 pt-2 flex flex-col`}>
       {/*header*/}
 
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
@@ -449,10 +450,10 @@ const Chat = () => {
         </form>
       </div>
 
-      {/*Type message over*/}
+      {/*Type message over*/} 
     </div>
   ) : (
-    <div className="bg-white w-[70%] flex items-center justify-center">
+    <div className={`bg-white p-4 ${isMobile?"w-[100%]":"w-[70%]"} flex items-center justify-center`}>
       <div className="text-center space-y-2 border border-dashed border-[#4CAF93] p-4 rounded-2xl">
         <p>Click on Any Chat</p>
         <p>

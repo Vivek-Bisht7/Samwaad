@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { IoLogOut } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { IoIosSettings } from "react-icons/io";
@@ -8,6 +8,8 @@ import axios from "../utils/axios";
 import { Link } from "react-router-dom";
 
 const Navbar2 = () => {
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
 
   const logoutHandler = () => {
@@ -21,17 +23,17 @@ const Navbar2 = () => {
         console.error(err);
       });
   };
-
+ 
   return (
-    <div className="min-h-screen w-[3vw] bg-[#4CAF93]">
+    <div className="h-[88vh] w-[9vw] bg-[#4CAF93]">
       {/* top icons */}
-      <div className="flex flex-col gap-4 items-center h-[40%] pt-4">
-        <VscThreeBars className="text-2xl text-white cursor-pointer" />
+      <div className="flex flex-col gap-4 items-center h-[40%] pt-4 ">
+        <Link to={"/chats"}><VscThreeBars className="text-2xl text-white cursor-pointer"/></Link>
         <Link to="/createGroup"><MdGroups className="text-2xl text-white cursor-pointer" /></Link>
       </div>
 
       {/* bottom icons */}
-      <div className="flex flex-col gap-4 items-center justify-end h-[50%]">
+      <div className="flex flex-col gap-4 items-center justify-end h-[60%] ">
         <Link to={"/settings"}>
           <button>
           <IoIosSettings className="text-2xl text-white cursor-pointer" />
