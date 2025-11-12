@@ -22,18 +22,6 @@ const CreateGroup = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios
-  //     .get("/user/currentUser")
-  //     .then((res) => {
-  //       setCurrentUser(res.data.user);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message);
-  //     });
-  // }, []);
-  
-
   const getOtherUser = (users, loggedInUser) => {
     return users.find((u) => u._id?.toString() !== loggedInUser?.toString());
   };
@@ -117,10 +105,10 @@ const CreateGroup = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex  h-[calc(100vh-8vh)] w-full">
+      <div className="flex  h-[88vh] w-full">
         <Navbar2 />
         <div className=" h-full w-full flex justify-center items-center">
-          <div className="bg-gray-50 shadow-xl rounded-md min-h-[30%] w-[70%] p-4 space-y-4">
+          <div className="bg-gray-50 shadow-xl rounded-md min-h-[30%] w-[70%] lg:w-[30%] p-4 space-y-4">
             <Link to={"/"}>
               <ImCross className="ml-[95%] text-gray-400 cursor-pointer mb-2" />
             </Link>

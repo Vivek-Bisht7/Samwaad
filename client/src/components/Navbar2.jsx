@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 const Navbar2 = () => {
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
 
   const logoutHandler = () => {
@@ -25,10 +25,10 @@ const Navbar2 = () => {
   };
  
   return (
-    <div className="h-[88vh] w-[9vw] bg-[#4CAF93]">
+    <div className="h-[88vh] w-[9vw] md:w-[7vw] lg:w-[4vw] bg-[#4CAF93]">
       {/* top icons */}
       <div className="flex flex-col gap-4 items-center h-[40%] pt-4 ">
-        <Link to={"/chats"}><VscThreeBars className="text-2xl text-white cursor-pointer"/></Link>
+        {isMobile && <Link to={"/chats"}><VscThreeBars className="text-2xl text-white cursor-pointer"/></Link>}
         <Link to="/createGroup"><MdGroups className="text-2xl text-white cursor-pointer" /></Link>
       </div>
 

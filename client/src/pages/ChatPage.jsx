@@ -11,7 +11,7 @@ import { ChatContext } from "../contexts/ChatContext";
 const ChatPage = () => {
   const { currentUser } = useContext(UserContext);
   const { selectedChat } = useContext(ChatContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <768);
 
   useEffect(() => {
     if (!currentUser) return;

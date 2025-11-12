@@ -25,7 +25,7 @@ const Chat = () => {
   const formRef = useRef(null);
   const [fileStatus, setfileStatus] = useState(false);
   const [emojiPickerStatus, setemojiPickerStatus] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Used to fetch current user using backend
   useEffect(() => {

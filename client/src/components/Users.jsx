@@ -14,7 +14,7 @@ const Users = () => {
   const {allChats, setallChats} = useContext(AllChatContext);
   const { currentUser } = useContext(UserContext);
   const { selectedChat, setselectedChat } = useContext(ChatContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ const Users = () => {
   };
 
   return (
-    <div className={`${isMobile?"w-[100%]":"w-[30%]"}`}>
+    <div className={`${isMobile?"w-[100%]":"w-[30%]"} md:w-[40%] lg:w-[35%]`}>
       {isMobile && <Navbar/>}
       <div className="flex ">
         {isMobile && <Navbar2/>}

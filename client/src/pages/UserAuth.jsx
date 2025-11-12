@@ -201,29 +201,16 @@ const UserAuth = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <ToastContainer
-        position="top-center"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       <Navbar />
       <div className="flex justify-center items-center min-h-[90vh]">
         <form
           action=""
-          className="bg-white min-h-[30vh] w-[90%]  rounded-2xl p-4 shadow-sm shadow-[#4CAF93]"
+          className="bg-white min-h-[30vh] w-[90%] md:w-[60%] lg:w-[30%]  rounded-2xl p-4 shadow-sm shadow-[#4CAF93]"
         >
           <div className="w-full">
             <button
               type="button"
-              className={`w-1/2 h-[6vh] rounded-t-2xl font-semibold ${
+              className={`w-1/2 h-[6vh] md:h-[5vh] lg:h-[7vh] rounded-t-2xl font-semibold ${
                 status ? "bg-[#4CAF93] text-white" : "bg-gray-200 text-gray-700"
               }`}
               onClick={() => {
@@ -238,7 +225,7 @@ const UserAuth = () => {
                 !status
                   ? "bg-[#4CAF93] text-white"
                   : "bg-gray-200 text-gray-700"
-              } w-1/2 h-[6vh] rounded-t-2xl font-semibold`}
+              } w-1/2 h-[6vh] md:h-[5vh] lg:h-[7vh] rounded-t-2xl font-semibold`}
               onClick={() => {
                 setstatus(false);
               }}
@@ -256,7 +243,7 @@ const UserAuth = () => {
                 onChange={(e) => {
                   setloginEmail(e.target.value);
                 }}
-                className="w-full h-[4vh] px-3 bg-gray-100 outline-none focus:ring-2 focus:ring-[#4CAF93] rounded-md text-black mt-4"
+                className="w-full h-[4vh]  lg:h-[6vh] px-3 bg-gray-100 outline-none focus:ring-2 focus:ring-[#4CAF93] rounded-md text-black mt-4"
                 autoComplete="off"
                 required
               />
@@ -267,12 +254,12 @@ const UserAuth = () => {
                 onChange={(e) => {
                   setloginPassword(e.target.value);
                 }}
-                className="w-full h-[4vh]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
+                className="w-full h-[4vh] lg:h-[6vh]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
                 autoComplete="off"
                 required
               />
 
-              <button className="bg-[#4CAF93] text-white  w-full h-[5vh] font-semibold rounded-md mt-4 cursor-pointer" type="button" onClick={loginHandler}>
+              <button className="bg-[#4CAF93] text-white  w-full h-[5vh] lg:h-[7vh] font-semibold rounded-md mt-4 cursor-pointer" type="button" onClick={loginHandler}>
                 Login
               </button>
             </div>
@@ -287,12 +274,12 @@ const UserAuth = () => {
                 onChange={(e) => {
                   setuserName(e.target.value);
                 }}
-                className="w-full h-[4vh]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
+                className="w-full h-[4vh] lg:h-[6vh] px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
                 autoComplete="off"
                 required
               />
 
-              <div className="flex items-center min-w-full h-[4vh] mt-4">
+              <div className="flex items-center min-w-full h-[4vh] lg:h-[6vh] mt-4">
                 <input
                   type="email"
                   placeholder="Enter E-mail"
@@ -315,7 +302,7 @@ const UserAuth = () => {
               </div>
 
               {getOTP ? (
-                <div className="mt-4  w-full h-[5vh] flex justify-between items-center">
+                <div className="mt-4  w-full h-[5vh] lg:h-[6vh] flex justify-between items-center">
                   <OTPInput onOtpComplete={otpSetter} />
                   <Timer />
                   <button
@@ -338,13 +325,13 @@ const UserAuth = () => {
                 onChange={(e) => {
                   setuserPassword(e.target.value);
                 }}
-                className="w-full h-[4vh]  px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
+                className="w-full h-[4vh] lg:h-[6vh] px-3 focus:ring-2 focus:ring-[#4CAF93] rounded-md bg-gray-100 outline-none text-[#212121] mt-4"
                 autoComplete="off"
                 required
               />
 
               <button
-                className="bg-[#4CAF93] text-white w-full h-[5vh] font-semibold rounded-md mt-4 cursor-pointer"
+                className="bg-[#4CAF93] text-white w-full h-[5vh] lg:h-[7vh] font-semibold rounded-md mt-4 cursor-pointer"
                 type="button"
                 onClick={registerHandler}
               >

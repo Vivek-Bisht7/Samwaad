@@ -61,7 +61,7 @@ const Navbar = () => {
   };
   
   return (
-    <nav className={`flex flex-col items-center space-y-2 p-2 text-3xl text-[#FAFAFA] bg-[#4CAF93] ${currentUser?"h-[12vh]":"h-[8vh] p-4"}`}>
+    <nav className={`flex flex-col items-center justify-center space-y-2 p-2 text-3xl text-[#FAFAFA] bg-[#4CAF93] ${currentUser?"h-[12vh]":"h-[8vh] p-4"}`}>
       <pre className="tracking-wide text-2xl font-sans font-semibold">  SAMWAAD</pre>
       <div className="flex h-[4vh]">
         {currentUser ? (
@@ -74,7 +74,7 @@ const Navbar = () => {
             </button>
             <input
               type="text"
-              className="flex justify-center outline-none text-sm text-white w-[70vw] placeholder:text-white"
+              className="flex justify-center outline-none text-sm md:text-lg text-white w-[70vw] md:w-[45vw] lg:w-[28vw] placeholder:text-white"
               placeholder="Search user Globally by email or username"
               onChange={(e) => {
                 setuser(e.target.value);

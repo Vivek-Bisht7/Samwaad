@@ -19,7 +19,7 @@ const Timer = () => {
   
 
   return (
-    <div className="bg-[#FFD166] text-[#212121] rounded-md text-xl font-semibold w-[18vw] h-[6vh] flex items-center justify-center">
+    <div className="bg-[#FFD166] text-[#212121] rounded-md text-xl font-semibold w-[18vw] lg:w-[6vw] h-[6vh] flex items-center justify-center">
       {formattedTime()}
     </div>
   );

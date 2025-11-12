@@ -13,7 +13,7 @@ const ViewImage = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex h-[calc(100vh-8vh)] w-[100%] overflow-hidden">
+      <div className="flex h-[88vh] w-[100%] overflow-hidden">
         <Navbar2 />
 
         <div className="flex flex-col items-center justify-center h-[100%] w-[100%]">

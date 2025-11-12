@@ -41,7 +41,7 @@ const OTPInput = ({ onOtpComplete }) => {
         <input
           key={index}
           type="text"
-          className="border rounded-md w-[9vw] h-[9vw] bg-[#4CAF93] text-[#FAFAFA] outline-none font-bold text-center"
+          className="border rounded-md w-[9vw] h-[9vw] lg:w-[3vw] lg:h-[3vw] bg-[#4CAF93] text-[#FAFAFA] outline-none font-bold text-center"
           value={otpValue[index]}
           onChange={(e) => inputChangeHandler(e.target.value, index)}
           ref={(element) => (inputRefs.current[index] = element)}

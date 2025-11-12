@@ -10,7 +10,6 @@ import ViewImage from "./ViewImage";
 const GroupDetails = () => {
   const location = useLocation();
   const { group } = location.state || {};
-  console.log(group);
 
   const [groupAdminName, setgroupAdminName] = useState("");
   const [groupAdminEmail, setgroupAdminEmail] = useState("");
@@ -44,10 +43,10 @@ const GroupDetails = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex h-[calc(100vh-8vh)] w-[100%] overflow-hidden">
+      <div className="flex h-[88vh] w-[100%] overflow-hidden">
         <Navbar2 />
         <div className="flex items-center justify-center h-[100%] w-[100%]">
-          <div className="bg-emerald-100 shadow-2xl h-[80%] w-[60%] rounded-md p-4 space-y-2 flex flex-col">
+          <div className="bg-emerald-100 shadow-2xl h-[70%] w-[90%] lg:w-[60%] rounded-md p-4 space-y-2 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <div></div>
               <div className="text-3xl font-semibold tracking-wide text-gray-800">
