@@ -33,7 +33,7 @@ const Navbar2 = () => {
       </div>
 
       {/* bottom icons */}
-      <div className="flex flex-col gap-4 items-center justify-end h-[60%] ">
+      <div className="flex flex-col gap-4 items-center justify-end h-[60%] pb-4">
         <Link to={"/settings"}>
           <button>
           <IoIosSettings className="text-2xl text-white cursor-pointer" />

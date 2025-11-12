@@ -117,10 +117,10 @@ const CreateGroup = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex  h-[calc(100vh-8vh)] w-[100%] overflow-hidden">
+      <div className="flex  h-[calc(100vh-8vh)] w-full">
         <Navbar2 />
-        <div className=" h-[100%] w-[100%] flex justify-center items-center">
-          <div className="bg-gray-50 shadow-xl rounded-md h-[55%] w-[30%] p-4 space-y-4">
+        <div className=" h-full w-full flex justify-center items-center">
+          <div className="bg-gray-50 shadow-xl rounded-md min-h-[30%] w-[70%] p-4 space-y-4">
             <Link to={"/"}>
               <ImCross className="ml-[95%] text-gray-400 cursor-pointer mb-2" />
             </Link>
@@ -169,9 +169,11 @@ const CreateGroup = () => {
 
               <input type="file" hidden ref={inputRef} onChange={fileChange} />
 
-              <button className="bg-[#4CAF93] outline-none p-1 rounded-md text-white font-bold tracking-wide cursor-pointer w-[60%] ml-16">
+              <div className="flex justify-center"> 
+                <button className="bg-[#4CAF93] outline-none p-1 rounded-md text-white font-bold tracking-wide cursor-pointer w-[60%]">
                 SUBMIT
               </button>
+              </div>
             </form>
           </div>
         </div>

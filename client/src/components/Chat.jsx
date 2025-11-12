@@ -7,7 +7,7 @@ import { ChatContext } from "../contexts/ChatContext";
 import axios from "../utils/axios";
 import socket from "../utils/socket";
 import { UserContext } from "../contexts/UserContext";
-import EmojiPicker from "emoji-picker-react";
+//import EmojiPicker from "emoji-picker-react";
 import { Link } from "react-router-dom";
 
 const Chat = () => {
@@ -160,7 +160,7 @@ const Chat = () => {
   };
 
   const TypingIndicatorVisual = () => (
-    <div className="flex items-center justify-center space-x-2 mx-2 h-6 bg-gray-300 rounded-2xl w-[15%]">
+    <div className="flex items-center justify-center space-x-2 mx-2 h-6 bg-gray-100 rounded-2xl w-[15%]">
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce"></span>
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-300"></span>
       <span className="w-2 h-2 bg-gray-700 rounded-full animate-bounce delay-600"></span>
@@ -220,7 +220,7 @@ const Chat = () => {
   };
 
   return selectedChat ? (
-    <div className={`${isMobile?"w-[100%]":"w-[70%]"} h-[88vh] bg-white px-2 pt-2 flex flex-col`}>
+    <div className={`${isMobile?"w-[90vw]":"w-[70%]"} h-[88vh] bg-white px-2 pt-2 flex flex-col`}>
       {/*header*/}
 
       <div className="h-[8vh] w-full border-b-2 border-gray-300 px-3 py-1 flex justify-between">
@@ -376,11 +376,11 @@ const Chat = () => {
           })}
         <div>{typingUser && TypingIndicatorVisual()}</div>
         <div className={emojiPickerStatus ? "visible" : "hidden"}>
-          <EmojiPicker
+          {/* <EmojiPicker
             onEmojiClick={(emojiObject) => {
               setcontent((prev) => (prev || "") + emojiObject.emoji);
             }}
-          />
+          /> */}
         </div>
         <div ref={bottomMessageRef}></div>
       </div>

@@ -73,10 +73,10 @@ const SettingsPage = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex h-[calc(100vh-8vh)] w-[100%] overflow-hidden">
+      <div className="flex h-[calc(100vh-8vh)] w-full overflow-hidden">
         <Navbar2 />
-        <div className="flex items-center justify-center h-[100%] w-[100%]">
-          <div className="bg-emerald-200 shadow-2xl h-fit w-[30%] rounded-md p-4 space-y-2 flex flex-col">
+        <div className="flex items-center justify-center h-full w-full">
+          <div className="bg-emerald-200 shadow-2xl h-fit w-[70%] rounded-md p-4 space-y-2 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <div></div>
               <div className="text-center text-2xl font-semibold tracking-wide text-gray-800">

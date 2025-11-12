@@ -43,12 +43,12 @@ const UserProfile = () => {
         <Navbar2 />
 
         <div className="flex flex-col items-center justify-center bg-emerald-100 h-[100%] w-[100%]">
-          <div className="flex w-[35%] justify-end">
+          <div className="flex w-[70%] justify-end">
             <Link to={"/"}>
               <ImCross className="text-gray-400  hover:text-gray-600 cursor-pointer text-xl m-2" />
             </Link>
           </div>
-          <div className="w-[30%] bg-white shadow-2xl rounded-xl p-10">
+          <div className="w-[80%] bg-white shadow-2xl rounded-xl p-10">
             <div className="h-50 w-full  flex justify-center p-3">
               <Link to={"/view"} state={{ URL: userData?.userImage }}>
                 <img
