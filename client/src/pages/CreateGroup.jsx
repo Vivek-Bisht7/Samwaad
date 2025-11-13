@@ -8,19 +8,37 @@ import { ImCross } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
-import { useContext } from "react"; 
-import { AllChatContext } from "../contexts/AllChatContext";
+import { useContext } from "react";
 
 const CreateGroup = () => {
- 
+  const [allChats, setallChats] = useState([]);
   const [selectedOption, setselectedOption] = useState([]);
-  const {allChats,setallChats} = useContext(AllChatContext);
   const [groupName, setgroupName] = useState("");
   const [optionsArr, setoptionsArr] = useState([]);
   const inputRef = useRef();
   const [profileStatus, setProfileStatus] = useState(false);
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("/chat")
+      .then((res) => {
+        setallChats(res.data.chats);
+      })
+      .catch((error) => {
+        console.error("Error : " + error.message);
+      });
+
+    axios
+      .get("/user/currentUser")
+      .then((res) => {
+        setCurrentUser(res.data.user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
 
   const getOtherUser = (users, loggedInUser) => {
     return users.find((u) => u._id?.toString() !== loggedInUser?.toString());
@@ -105,10 +123,10 @@ const CreateGroup = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex  h-[88vh] w-full">
+      <div className="flex  h-[88vh] w-full overflow-hidden">
         <Navbar2 />
         <div className=" h-full w-full flex justify-center items-center">
-          <div className="bg-gray-50 shadow-xl rounded-md min-h-[30%] w-[70%] lg:w-[30%] p-4 space-y-4">
+          <div className="bg-gray-50 shadow-xl rounded-md h-[50%] w-[30%] p-4 space-y-4">
             <Link to={"/"}>
               <ImCross className="ml-[95%] text-gray-400 cursor-pointer mb-2" />
             </Link>
@@ -147,7 +165,7 @@ const CreateGroup = () => {
                 </button>
               ) : (
                 <button
-                  className="bg-gray-100 outline-none p-1 rounded-md cursor-pointer text-gray-500"
+                  className="bg-green-100 outline-none p-1 rounded-md cursor-pointer text-gray-500"
                   type="button"
                   onClick={groupImage}
                 >
@@ -157,11 +175,9 @@ const CreateGroup = () => {
 
               <input type="file" hidden ref={inputRef} onChange={fileChange} />
 
-              <div className="flex justify-center"> 
-                <button className="bg-[#4CAF93] outline-none p-1 rounded-md text-white font-bold tracking-wide cursor-pointer w-[60%]">
+              <button className="bg-[#4CAF93] outline-none p-1 rounded-md text-white font-bold tracking-wide cursor-pointer w-[60%] ml-16">
                 SUBMIT
               </button>
-              </div>
             </form>
           </div>
         </div>

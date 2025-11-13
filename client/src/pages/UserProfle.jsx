@@ -43,7 +43,7 @@ const UserProfile = () => {
         <Navbar2 />
 
         <div className="flex flex-col items-center justify-center bg-emerald-100 h-[100%] w-[100%]">
-          <div className="flex w-[44%] justify-end">
+          <div className="flex w-[84%] justify-end">
             <Link to={"/"}>
               <ImCross className="text-gray-400  hover:text-gray-600 cursor-pointer text-xl m-2" />
             </Link>
