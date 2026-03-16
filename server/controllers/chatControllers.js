@@ -107,7 +107,7 @@ const createGroupChat = async (req, res) => {
     users: arr,
     isGroupChat: true,
     groupAdmin: req.user.id,
-    groupImage: `${process.env.BACKEND_URL}/group/${req.file.filename}`,
+    groupImage: req.file.path,
   });
 
   return res

@@ -59,7 +59,7 @@ const uploadFile = async (req, res) => {
       });
     }
 
-    const url = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
+    const url = req.file.path;
 
     let newMessage = await Message.create({
       sender,

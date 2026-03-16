@@ -96,7 +96,6 @@ const sendOTPEmail = (userEmail, otp) => {
       html: htmlContent,
     });
 
-    console.log("Message sent:", info.messageId);
   })();
 };
 
@@ -174,7 +173,7 @@ const verifyOTP = async (req, res) => {
       .status(200)
       .json({ success: true, message: "OTP matched successfully" });
   } catch (err) {
-    console.log("Error : " + err.message);
+    console.error("Error : " + err.message);
 
     return res
       .status(500)

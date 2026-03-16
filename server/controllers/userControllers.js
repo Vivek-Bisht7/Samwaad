@@ -40,7 +40,7 @@ const registerUser = async (req, res) => {
       .status(200)
       .json({ success: true, message: "User created successfully" });
   } catch (err) {
-    console.log("Error : " + err.message);
+    console.error("Error : " + err.message);
   }
 };
 
@@ -72,7 +72,7 @@ const loginUser = async (req, res) => {
     }
 
     if (!process.env.ACCESS_SECRET || !process.env.REFRESH_SECRET) {
-      console.log("SECRET is not defined in environment variables.");
+      console.error("SECRET is not defined in environment variables.");
 
       return res
         .status(500)
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
 
     return res.status(200).json({ success: true, message: "OK" });
   } catch (err) {
-    console.log("Error : " + err.message);
+    console.error("Error : " + err.message);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
@@ -212,7 +212,7 @@ const updateProfile = async (req, res) => {
     user.userImage = `https://avatar.iran.liara.run/username?username=${user.userName}`;
     await user.save();
   } else {
-    user.userImage = `${process.env.BACKEND_URL}/profile/${req.file.filename}`;
+    user.userImage = req.file.path;
     await user.save();
   }
 

@@ -25,11 +25,9 @@ dbConnection();
 const OnlineUsers = new Map();
 
 io.on("connection" , (socket)=>{
-  console.log("User connected : " + socket.id);
 
   socket.on("joinChat" , (chatId)=>{
     socket.join(chatId);
-    console.log(`User ${socket.id} joined chat : ${chatId}`);
   })
 
   socket.on("newMessage",(message)=>{
@@ -39,7 +37,6 @@ io.on("connection" , (socket)=>{
 
   socket.on("leaveChat",(chatId)=>{
     socket.leave(chatId);
-    console.log(`${socket.id} left Chat: ${chatId}`);
   })
 
   socket.on("typing" , ({chatId , user})=>{
@@ -64,7 +61,6 @@ io.on("connection" , (socket)=>{
   })
 
   socket.on("disconnect" , ()=>{
-    console.log("User Disconnected : "+  socket.id);
 
     const UserId = OnlineUsers.get(socket.id);
     if(!UserId) return;

@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     userImage:{
         type:String,
-        default:"/Images/userImage.jpg",
+        default:"https://res.cloudinary.com/dayosnlay/image/upload/v1773680700/project/uploads/1773680698421-userImage.jpg.jpg",
     },
 },{timestamps:true})
 
