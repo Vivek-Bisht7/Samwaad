@@ -212,7 +212,7 @@ const updateProfile = async (req, res) => {
     user.userImage = `https://avatar.iran.liara.run/username?username=${user.userName}`;
     await user.save();
   } else {
-    user.userImage = `http://localhost:3000/profile/${req.file.filename}`;
+    user.userImage = `${process.env.BACKEND_URL}/profile/${req.file.filename}`;
     await user.save();
   }
 

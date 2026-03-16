@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const { dbConnection } = require("./config/connection");
 const tempUserRoutes = require("./routes/tempUserRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -14,12 +15,11 @@ const path = require('path');
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   },
 });
 
-require("dotenv").config();
 dbConnection();
 
 const OnlineUsers = new Map();
@@ -78,7 +78,7 @@ io.on("connection" , (socket)=>{
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
@@ -93,6 +93,10 @@ app.use("/api/otp", tempUserRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+app.get('/health',(req,res)=>{
+  res.status(200).json({"Status":"OK"});
+})
 
 server.listen(process.env.PORT, () => {
   console.log("Server has started running..");

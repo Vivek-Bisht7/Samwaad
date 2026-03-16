@@ -53,42 +53,38 @@ const uploadFile = async (req, res) => {
     const sender = req.user.id;
 
     if (!req.file) {
-      return res
-        .status(404)
-        .json({ success: false, message: "File not found" });
+      return res.status(400).json({
+        success: false,
+        message: "File not provided",
+      });
     }
 
-    const url = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`;
+    const url = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
 
-    let newMessage = await Message.create({ sender, chatId, imageUrl: url });
+    let newMessage = await Message.create({
+      sender,
+      chatId,
+      imageUrl: url,
+    });
 
-    const chat = await Chat.findOne({ _id: chatId });
+    newMessage = await newMessage.populate("sender", "userName userImage");
+    newMessage = await newMessage.populate("chatId", "isGroupChat");
 
-    // const extName = path.extname(req.file.filename);
-
-    // const allowedExtensionsImages = [
-    //   ".png",
-    //   ".jpg",
-    //   ".jpeg",
-    //   ".gif",
-    //   ".bmp",
-    //   ".webp",
-    //   ".svg",
-    //   ".tiff",
-    // ];
-    // if (allowedExtensionsImages.includes(extName.toLowerCase())) {
-    //     chat.latestMessage = "Image";
-    //     await chat.save();
-    // }
+    const chat = await Chat.findById(chatId);
+    chat.latestMessage = newMessage._id;
+    await chat.save();
 
     return res.status(201).json({
       success: true,
-      message: "Message sent successfully",
+      message: "File sent successfully",
       newMessage,
     });
   } catch (error) {
-    console.error("Error : " + error.message);
-    return res.status(500).json({ Error: error.message });
+    console.error("Error: " + error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const dbConnection = async ()=>{
     try{
-        await mongoose.connect("mongodb://127.0.0.1:27017/Samwaad");
+        await mongoose.connect(process.env.MONGODB_URI);
         console.log("Database connected successfully.");
     }
     catch(e){
