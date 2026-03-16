@@ -85,7 +85,7 @@ const loginUser = async (req, res) => {
     const refreshToken = jwt.sign(
       { id: user._id },
       process.env.REFRESH_SECRET,
-      { expiresIn: "60d" }
+      { expiresIn: "60d" },
     );
 
     user.refreshToken = refreshToken;
@@ -93,15 +93,15 @@ const loginUser = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 15,
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
@@ -135,14 +135,14 @@ const handleRefreshToken = (req, res) => {
     const newAccessToken = jwt.sign(
       { id: user._id },
       process.env.ACCESS_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
     );
 
-    res.cookie("accessToken", newAccessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 20000,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 15,
     });
 
     return res.json({ success: true, message: "Access token refreshed" });
@@ -151,18 +151,18 @@ const handleRefreshToken = (req, res) => {
 
 const handleLogout = (req, res) => {
   try {
-    res.cookie("accessToken", "", {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      sameSite: "Strict",
-      expires: new Date(0),
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 15,
     });
 
-    res.cookie("refreshToken", "", {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      sameSite: "Strict",
-      expires: new Date(0),
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
     return res.status(200).json("Logout successfull");

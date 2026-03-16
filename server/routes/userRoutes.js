@@ -8,7 +8,7 @@ router.post("/register",registerUser);
 router.post("/login",loginUser);
 router.post("/refresh", handleRefreshToken);
 router.post("/logout",handleLogout)
-router.get("/currentUser",getCurrentUser);
+router.get("/currentUser",authenticateUser,getCurrentUser);
 router.post("/getUser",authenticateUser,searchUser);
 router.post("/:type",authenticateUser,upload.single('file'),updateProfile);
 router.get("/getUserById/:userId",authenticateUser,getUserDetails);
