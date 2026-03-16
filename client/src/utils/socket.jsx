@@ -1,6 +1,7 @@
-import React from 'react'
-import io from 'socket.io-client'
+import { io } from "socket.io-client";
 
-const socket = io(import.meta.env.SOCKET_URL);
+const socket = io(import.meta.env.VITE_SOCKET_URL, {
+  withCredentials: true
+});
 
-export default socket
+export default socket;
