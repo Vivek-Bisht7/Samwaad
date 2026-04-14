@@ -3,7 +3,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
-const sendOTPEmail = (userEmail, otp) => {
+const sendOTPEmail = async (userEmail, otp) => {
   const htmlContent = `<!DOCTYPE html>
                         <html lang="en">
                         <head>
@@ -80,24 +80,26 @@ const sendOTPEmail = (userEmail, otp) => {
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
       user: `${process.env.EMAIL}`,
       pass: `${process.env.PASSWORD}`,
     },
   });
 
-  (async () => {
-    const info = await transporter.sendMail({
-      from: `"Samwaad" <${process.env.EMAIL}>`,
-      to: userEmail,
-      subject: "Verify your E-mail",
-      html: htmlContent,
-    });
+  try {
+  const info = await transporter.sendMail({
+    from: `"Samwaad" <${process.env.EMAIL}>`,
+    to: userEmail,
+    subject: "Verify your E-mail",
+    html: htmlContent,
+  });
 
-  })();
-};
+  console.log("Email sent:", info.response);
+} catch (error) {
+  console.error("Email error:", error);
+}
 
 const createTempUser = async (req, res) => {
   const { userEmail } = req.body;
@@ -138,7 +140,7 @@ const createTempUser = async (req, res) => {
   } catch (e) {
     return res.status(500).json({ success: false, message: e.message });
   }
-};
+}};
 
 const verifyOTP = async (req, res) => {
   const { userEmail, OTP } = req.body;

@@ -138,7 +138,7 @@ const handleRefreshToken = (req, res) => {
       { expiresIn: "15m" },
     );
 
-    res.cookie("accessToken", accessToken, {
+    res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
