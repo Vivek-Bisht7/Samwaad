@@ -99,7 +99,7 @@ const sendOTPEmail = async (userEmail, otp) => {
   console.log("Email sent:", info.response);
 } catch (error) {
   console.error("Email error:", error);
-}
+}}
 
 const createTempUser = async (req, res) => {
   const { userEmail } = req.body;
@@ -140,7 +140,7 @@ const createTempUser = async (req, res) => {
   } catch (e) {
     return res.status(500).json({ success: false, message: e.message });
   }
-}};
+};
 
 const verifyOTP = async (req, res) => {
   const { userEmail, OTP } = req.body;
