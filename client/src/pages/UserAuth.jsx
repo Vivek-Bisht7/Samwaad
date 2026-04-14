@@ -26,8 +26,8 @@ const UserAuth = () => {
   const [userPassword, setuserPassword] = useState("");
 
   //Login form credentials
-  const [loginEmail, setloginEmail] = useState("");
-  const [loginPassword, setloginPassword] = useState("");
+  const [loginEmail, setloginEmail] = useState("demo_account1@gmail.com");
+  const [loginPassword, setloginPassword] = useState("1");
 
   // OTP Value by user
   const [OTP, setOTP] = useState();

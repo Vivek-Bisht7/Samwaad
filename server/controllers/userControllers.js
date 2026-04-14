@@ -151,18 +151,16 @@ const handleRefreshToken = (req, res) => {
 
 const handleLogout = (req, res) => {
   try {
-    res.cookie("accessToken", accessToken, {
+    res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 1000 * 60 * 15,
     });
 
-    res.cookie("refreshToken", refreshToken, {
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24 * 60,
     });
 
     return res.status(200).json("Logout successfull");
